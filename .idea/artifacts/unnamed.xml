@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="unnamed">
+    <output-path>$PROJECT_DIR$/out/artifacts/unnamed</output-path>
+    <root id="archive" name="sea-battle.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="sea-battle" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
