@@ -3,9 +3,12 @@ package org.krista.seabattle;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.enterprise.context.ApplicationScoped;
+
 import javax.enterprise.context.SessionScoped;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.io.Serializable;
+
 import java.util.ArrayList;
 
 @SessionScoped
@@ -40,12 +43,57 @@ public class PlayerField implements Serializable {
     }
 
     //Probably gonna use Fabric Pattern for ships
-    public void placePlayerShips() {
-
+    public void placePlayerShips(JSONObject ships) {
+        ArrayList<BattleShip> shipsToPlace;
+        Jsonb jsonb = JsonbBuilder.create();
+        String result = jsonb.toJson(ships);
+        shipsToPlace = jsonb.fromJson(result, ArrayList.class);
+        for(BattleShip ship: shipsToPlace){
+            this.ships.add(ship);
+            updateField(ship);
+        }
     }
 
-    public boolean checkPlayerShips() {
-        return false;
+    private void updateField(BattleShip ship) {
+        for(int[] coord : ship.getShipParts()){
+            field[coord[0]][coord[1]] = 1;
+        }
+    }
+
+    public boolean checkPlayerShips(JSONObject ships) {
+        ArrayList<BattleShip> shipsToCheck;
+        Jsonb jsonb = JsonbBuilder.create();
+        String result = jsonb.toJson(ships);
+        shipsToCheck = jsonb.fromJson(result, ArrayList.class);
+        int[][] checkField = field;
+        for (BattleShip ship : shipsToCheck) {
+            if (!checkShip(ship, checkField)) return false;
+            for (int[] coord : ship.getShipParts()) {
+                checkField[coord[0]][coord[1]] = 1;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkShip(BattleShip ship, int[][] checkField) {
+        ArrayList<int[]> coords = ship.getShipParts();
+        for (int[] coord : coords) {
+            if (field[coord[0]][coord[1]] == 1) { // Means coord is not available for placement
+                return false;
+            }
+        }
+        int x = ship.getShipParts().get(0)[0];
+        int y = ship.getShipParts().get(0)[1];
+        // add check for out of bounds x and y
+        for (int i = 1; i < ship.getNumberOfDecks() - 1; i++) {
+            if (!(coords.get(i)[0] == x || coords.get(i)[1] == y ) || (coords.get(i)[0] == x && coords.get(i)[1] == y)) {
+                // Если либо x либо y , не совпадают с
+                // соответсвующими x y первой палубы,
+                //то палуба не находится на одной линии с первой
+                return false;
+            }
+        }
+        return true;
     }
 
     public void receiveAttackFromServer(int x, int y) {
