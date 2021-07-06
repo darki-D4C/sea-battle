@@ -3,50 +3,21 @@ package org.krista.seabattle;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import org.json.*;
+import java.util.List;
 
 @SessionScoped
-public class ServerField implements Serializable {
-     /*
-    Here -1 element in fields represent an unknown tile, it is unclear whether there is a ship or not.
-    0 - empty tile, means no ship or part of the ship there
-    1 - ship tile, there is a ship or theres a part of some ship
-     */
+public class GameService implements Serializable {
 
-    private int[][] field = new int[10][10];
+    private GameField playerField;
+    private GameField serverField;
 
-    //private int[][] serverField = new int[10][10];
-
-    //private int[][] visibleServerField = new int[10][10]; - ?
-
-    private ArrayList<BattleShip> ships;
-
-    //private ArrayList<BattleShip> serverShips;
-
-    public ServerField() {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                this.field[i][j] = 0;
-            }
-        }
-
-        placeServerShips();
+    public GameService() {
+        this.playerField = new GameField();
+        this.serverField = new GameField();
+        serverField.setFieldAndShips(BasicAI.createBasicShips());
     }
 
-    public void attackPlayerField(int x,int y) {
-
-    }
-
-    public JSONObject receivePlayerAttack() {
-        return null;
-    }
-
-    public void updateTile(int x, int y) {
-
-    }
-
-
+    /*
     public void placeServerShips() {
         createServerShip(4, 1);                            //generate battleship
         createServerShip(3, 2);                               //generate Cruisers
@@ -57,12 +28,13 @@ public class ServerField implements Serializable {
     private void createServerShip(int countOfDecks, int maxCountOfShips) {
         int countOfShip = 0;
         while (countOfShip < maxCountOfShips) {
+            int[][] field = serverField.getField();
             int randomX = (int) (Math.random() * 10);
             int randomY = (int) (Math.random() * 10);
             int randomDirection = (int) (Math.random() * 4);
             char direction = randomDirection == 0 ? 'n' : randomDirection == 1 ? 'e' : randomDirection == 2 ? 's' : 'w';
 
-            while(!checkCoords(randomX,randomY,direction,countOfDecks) && field[randomX][randomY] == 0 ){
+            while(!checkCoords(randomX,randomY,direction,countOfDecks) && field[randomX][randomY] == 1 ){
                 randomX = (int) (Math.random() * 10);
                 randomY = (int) (Math.random() * 10);
                 randomDirection = (int) (Math.random() * 4);
@@ -77,13 +49,14 @@ public class ServerField implements Serializable {
             }
             countOfShip++;
             //
-            updateField(ship);
-            this.ships.add(ship);
+            serverField.updateField(ship);
+
         }
     }
 
     private boolean checkCoords(int randomX, int randomY, char direction, int countOfDecks) {
         ArrayList<int[]> coords;
+        int[][] field = serverField.getField();
 
         if(field[randomX][randomY] == 1){
             return false;
@@ -118,20 +91,54 @@ public class ServerField implements Serializable {
         return true;
     }
 
-    private void updateField(BattleShip ship) {
-        for (int[] coord : ship.getShipParts()) {
-            field[coord[0]][coord[1]] = 1;
+     */
+
+    public void placePlayerShips(ArrayList<BattleShip> ships) {
+        for (BattleShip ship : ships) {
+            playerField.updateField(ship);
         }
     }
 
-    //These two methods will be returned(json data) as a response from server in case of successful attack of miss
-    public JSONObject jsonSuccessAttack() {
-        return null;
+    public boolean checkPlayerShips(ArrayList<BattleShip> ships) {
+        if(ships == null) return false;
+        int[][] checkField = playerField.getField();
+        for (BattleShip ship : ships) {
+            if (!checkShip(ship)) return false;
+            for (int[] coord : ship.getShipParts()) {
+                if (!(checkField[coord[0]][coord[1]] == 1)) {
+                    checkField[coord[0]][coord[1]] = 1;
+                } else return false;
+            }
+        }
+        return true;
     }
 
-    public JSONObject jsonMissAttack() {
-        return null;
+    private boolean checkShip(BattleShip ship) {
+        if(ship.getShipParts() == null){
+            return false;
+        }
+        int[][] field = playerField.getField();
+        ArrayList<int[]> coords = ship.getShipParts();
+        if(ship.getShipParts().size() == 0){ // Почему то при инициализации обьекта класса Battleship из json, инициализируется
+                                            // кол-во парусов, но не массив координат парусов,
+            return false;
+        }
+        for (int[] coord : coords) {
+            if (field[coord[0]][coord[1]] == 1) { // Means coord is not available for placement
+                return false;
+            }
+        }
+        int x = (int)coords.get(0)[0];
+        int y = (int)coords.get(0)[1];
+        // add check for out of bounds x and y
+        for (int i = 1; i < ship.getNumberOfDecks() - 1; i++) {
+            if (!(coords.get(i)[0] == x || coords.get(i)[1] == y) || (coords.get(i)[0] == x && coords.get(i)[1] == y)) {
+                // Если либо x либо y , не совпадают с
+                // соответсвующими x y первой палубы,
+                //то палуба не находится на одной линии с первой
+                return false;
+            }
+        }
+        return true;
     }
-
-
 }
