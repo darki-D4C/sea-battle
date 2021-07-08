@@ -5,15 +5,21 @@ import org.json.JSONPropertyName;
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import javax.json.bind.annotation.JsonbCreator;
+import javax.json.bind.annotation.JsonbProperty;
 import java.util.ArrayList;
+import java.util.List;
 
 // Class to represent the coordinates for tiles
 public class BattleShip {
-    ArrayList<int[]> shipParts;
-    int numberOfDecks;
+    @JsonbProperty("shipParts")
+    private List<Coordinate> shipParts;
+    @JsonbProperty("numberOfDecks")
+    private int numberOfDecks;
 
-    public void checkPart(int x, int y) {
 
+    public BattleShip() {
+        this.numberOfDecks = 0;
+        this.shipParts = new ArrayList<>();
     }
 
 
@@ -22,31 +28,33 @@ public class BattleShip {
     }
 
     @JsonbCreator
-    public BattleShip(int numberOfDecks, ArrayList<int[]> shipParts){
+    public BattleShip(@JsonbProperty("numberOfDecks") int numberOfDecks, @JsonbProperty("shipParts") ArrayList<Coordinate> shipParts) {
         this.numberOfDecks = numberOfDecks;
         this.shipParts = shipParts;
     }
 
-    public BattleShip(ArrayList<int[]> coords) {
+    public BattleShip(ArrayList<Coordinate> coords) {
         this.shipParts = new ArrayList<>();
         shipParts.addAll(coords);
         this.numberOfDecks = shipParts.toArray().length;
     }
 
-    public void checkPlacement(int x, int y) {
-
+    public boolean checkCord(Coordinate cord) {
+        if (this.getShipParts().contains(cord)) {
+            return true;
+        } else return false;
     }
 
-    public void damagedShip(int x, int y) {
+    public void damageShip(Coordinate cord) {
         this.numberOfDecks--;
-        //shipParts.remove(int x, int y); //Ship damaged,remove damaged deck
+        this.shipParts.remove(cord); //Ship damaged,remove damaged deck
     }
 
     public int getNumberOfDecks() {
         return numberOfDecks;
     }
 
-    public ArrayList<int[]> getShipParts() {
+    public List<Coordinate> getShipParts() {
         return shipParts;
     }
 
@@ -59,4 +67,12 @@ public class BattleShip {
     }
 
 
+    public boolean hasPart(Coordinate cord) {
+        for (Coordinate xy : shipParts) {
+            if (xy.getX() == cord.getX() && xy.getY() == cord.getY()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

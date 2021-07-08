@@ -8,12 +8,10 @@ import java.util.List;
 @SessionScoped
 public class GameService implements Serializable {
 
-    private GameField playerField;
-    private GameField serverField;
+    private GameField playerField = new GameField();
+    private GameField serverField = new GameField();
 
     public GameService() {
-        this.playerField = new GameField();
-        this.serverField = new GameField();
         serverField.setFieldAndShips(BasicAI.createBasicShips());
     }
 
@@ -93,20 +91,20 @@ public class GameService implements Serializable {
 
      */
 
-    public void placePlayerShips(ArrayList<BattleShip> ships) {
+    public void placePlayerShips(List<BattleShip> ships) {
         for (BattleShip ship : ships) {
             playerField.updateField(ship);
         }
     }
 
-    public boolean checkPlayerShips(ArrayList<BattleShip> ships) {
-        if(ships == null) return false;
+    public boolean checkPlayerShips(List<BattleShip> ships) {
+        // if(ships == null) return false;
         int[][] checkField = playerField.getField();
         for (BattleShip ship : ships) {
             if (!checkShip(ship)) return false;
-            for (int[] coord : ship.getShipParts()) {
-                if (!(checkField[coord[0]][coord[1]] == 1)) {
-                    checkField[coord[0]][coord[1]] = 1;
+            for (Coordinate coord : ship.getShipParts()) {
+                if (!(checkField[coord.getX()][coord.getY()] == 1)) {
+                    checkField[coord.getX()][coord.getY()] = 1;
                 } else return false;
             }
         }
@@ -114,25 +112,22 @@ public class GameService implements Serializable {
     }
 
     private boolean checkShip(BattleShip ship) {
-        if(ship.getShipParts() == null){
-            return false;
-        }
+
+
         int[][] field = playerField.getField();
-        ArrayList<int[]> coords = ship.getShipParts();
-        if(ship.getShipParts().size() == 0){ // Почему то при инициализации обьекта класса Battleship из json, инициализируется
-                                            // кол-во парусов, но не массив координат парусов,
-            return false;
-        }
-        for (int[] coord : coords) {
-            if (field[coord[0]][coord[1]] == 1) { // Means coord is not available for placement
+        List<Coordinate> coords = ship.getShipParts();
+
+        for (Coordinate coord : coords) {
+            if (field[coord.getX()][coord.getY()] == 1) {
                 return false;
             }
         }
-        int x = (int)coords.get(0)[0];
-        int y = (int)coords.get(0)[1];
-        // add check for out of bounds x and y
+
+
+        int x = (int) coords.get(0).getX();
+        int y = (int) coords.get(0).getY();
         for (int i = 1; i < ship.getNumberOfDecks() - 1; i++) {
-            if (!(coords.get(i)[0] == x || coords.get(i)[1] == y) || (coords.get(i)[0] == x && coords.get(i)[1] == y)) {
+            if (!(coords.get(i).getX() == x || coords.get(i).getY() == y) || (coords.get(i).getX() == x && coords.get(i).getY() == y)) {
                 // Если либо x либо y , не совпадают с
                 // соответсвующими x y первой палубы,
                 //то палуба не находится на одной линии с первой
@@ -140,5 +135,36 @@ public class GameService implements Serializable {
             }
         }
         return true;
+    }
+
+    public GameField getPlayerField() {
+        return playerField;
+    }
+
+    public GameField getServerField() {
+        return serverField;
+    }
+
+    public boolean checkServerCoord(Coordinate cord) {
+
+        return serverField.getField()[cord.getX()][cord.getY()] == 1;
+
+    }
+
+    public void attackServerCoord(Coordinate cord) {
+        getServerField().getField()[cord.getX()][cord.getY()] = 0;
+        List<BattleShip> ships = serverField.getShips();
+        // ships не null
+        for (BattleShip ship : ships) {
+            if (ship.hasPart(cord)) { // никогда не находит координату хотя она есть в каком то из обьектов BattleShip
+                ship.damageShip(cord);
+            }
+        }
+
+
+
+    }
+
+    public void attackPlayerField() {
     }
 }
