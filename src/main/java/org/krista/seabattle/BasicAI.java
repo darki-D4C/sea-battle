@@ -1,6 +1,7 @@
 package org.krista.seabattle;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BasicAI {
     public static ArrayList<BattleShip> createBasicShips() {
@@ -46,7 +47,7 @@ public class BasicAI {
         coords.add(new Coordinate(7, 4));
         coords.add(new Coordinate(7, 5));
         ships.add(new BattleShip(coords));
-        coords.clear();
+
 
         return ships;
     }

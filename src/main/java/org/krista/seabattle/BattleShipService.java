@@ -32,13 +32,19 @@ public class BattleShipService implements Serializable {
     @Path("/attack")
     public Response attackServerField(Coordinate cord) { // not finished
         if (gameService.checkServerCoord(cord)) {
-            gameService.attackServerCoord(cord);
-            return Response.status(200).entity(gameService.getServerField().getShips()).build();
+            gameService.getServerField().attackCoord(cord);
+            if(gameService.getServerField().findShipByCord(cord).getNumberOfDecks()==0){
+                return Response.status(200).entity(gameService.getPlayerField().findShipByCord(cord).getShipParts()).build();
+            }
+            return Response.status(201).entity(cord).build();
         } else {
-            //gameService.attackPlayerField()
-            return Response.status(200).entity("fuck").build();
+            //Почему то в в BasicAi создается список обьектов BattleShip у которых все координаты равны последенему добавленому кораблю
+            return Response.status(202).entity(gameService.attackPlayerField().toString()).build();
 
         }
+
+        //
+        //gameService.checkServerCoord(cord)+" " + cord.getX()+" " + cord.getY()
 
     }
 

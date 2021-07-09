@@ -1,15 +1,20 @@
 package org.krista.seabattle;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.*;
 
 @SessionScoped
 public class GameService implements Serializable {
 
     private GameField playerField = new GameField();
     private GameField serverField = new GameField();
+    private ArrayList<Coordinate> alreadyAttackedByServer = new ArrayList<>();
 
     public GameService() {
         serverField.setFieldAndShips(BasicAI.createBasicShips());
@@ -102,7 +107,7 @@ public class GameService implements Serializable {
         int[][] checkField = playerField.getField();
         for (BattleShip ship : ships) {
             if (!checkShip(ship)) return false;
-            for (Coordinate coord : ship.getShipParts()) {
+            for (Coordinate coord : ship.getRemainingShipParts()) {
                 if (!(checkField[coord.getX()][coord.getY()] == 1)) {
                     checkField[coord.getX()][coord.getY()] = 1;
                 } else return false;
@@ -115,7 +120,7 @@ public class GameService implements Serializable {
 
 
         int[][] field = playerField.getField();
-        List<Coordinate> coords = ship.getShipParts();
+        List<Coordinate> coords = ship.getRemainingShipParts();
 
         for (Coordinate coord : coords) {
             if (field[coord.getX()][coord.getY()] == 1) {
@@ -151,20 +156,49 @@ public class GameService implements Serializable {
 
     }
 
-    public void attackServerCoord(Coordinate cord) {
-        getServerField().getField()[cord.getX()][cord.getY()] = 0;
-        List<BattleShip> ships = serverField.getShips();
-        // ships не null
-        for (BattleShip ship : ships) {
-            if (ship.hasPart(cord)) { // никогда не находит координату хотя она есть в каком то из обьектов BattleShip
-                ship.damageShip(cord);
+
+
+    public JSONArray attackPlayerField() {
+        boolean serverTurn = true;
+        JSONArray serverTurnActions = new JSONArray();
+        Coordinate coordToAttack;
+        while(serverTurn){
+            coordToAttack = generateCoord();
+            if(getPlayerField().getField()[coordToAttack.getX()][coordToAttack.getY()] == 1){
+                getPlayerField().attackCoord(coordToAttack);
+                BattleShip foundShip = getPlayerField().findShipByCord(coordToAttack);
+                if(foundShip.getNumberOfDecks()==0){
+                    serverTurnActions = JsonCreator.addInfoAboutDestroyedShip(serverTurnActions,foundShip);
+                }
+                serverTurnActions = JsonCreator.addInfoAboutDestroyedCord(serverTurnActions,coordToAttack);
+
+            }else{
+                serverTurn = false;
             }
         }
-
-
-
+        if(serverTurnActions.isEmpty()){
+            return JsonCreator.returnInfoAboutCompleteMiss();
+        }
+        return serverTurnActions;
     }
 
-    public void attackPlayerField() {
+    public Coordinate generateCoord(){
+        int randomX = (int) (Math.random() * 10);
+        int randomY = (int) (Math.random() * 10);
+        Coordinate pickedCord = new Coordinate(randomX,randomY);
+        while((getAttackedCoordsByServer().contains(pickedCord))){
+            randomX = (int) (Math.random() * 10);
+            randomY = (int) (Math.random() * 10);
+            pickedCord = new Coordinate(randomX,randomY);
+        }
+        return pickedCord;
     }
+
+    public List<Coordinate> getAttackedCoordsByServer(){
+        return alreadyAttackedByServer;
+    }
+
+
+
+
 }
