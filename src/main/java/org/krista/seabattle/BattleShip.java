@@ -24,13 +24,15 @@ public class BattleShip {
     public BattleShip(@JsonbProperty("numberOfDecks") int numberOfDecks, @JsonbProperty("shipParts") List<Coordinate> shipParts) {
         this.numberOfDecks = numberOfDecks;
         this.shipParts = shipParts;
-        this.remainingShipParts = shipParts;
+        this.remainingShipParts = new ArrayList<>();
+        this.remainingShipParts.addAll(shipParts);
     }
 
     public BattleShip(List<Coordinate> coords) {
         this.shipParts = coords;
         this.numberOfDecks = coords.size();
-        this.remainingShipParts = shipParts;
+        this.remainingShipParts = new ArrayList<>();
+        this.remainingShipParts.addAll(coords);
 
     }
 

@@ -38,7 +38,7 @@ public class GameField {
     }
 
     public BattleShip findShipByCord(Coordinate cord){
-        for(BattleShip ship: ships){
+        for(BattleShip ship: getShips()){
             if(ship.getShipParts().contains(cord)){
                 return ship;
             }
@@ -52,6 +52,7 @@ public class GameField {
         for (BattleShip ship : getShips()) {
             if (ship.hasPart(cord)) { // никогда не находит координату хотя она есть в каком то из обьектов BattleShip
                 ship.damageShip(cord);
+                return;
                 //Check if ship has alive parts
 
             }

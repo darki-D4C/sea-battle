@@ -27,4 +27,8 @@ public class JsonCreator {
 
         return new JSONArray().put(new JSONObject().put("status","miss"));
     }
+
+    public static JSONArray notifyAboutVictory(String side){
+        return new JSONArray().put(new JSONObject().put("winner",side));
+    }
 }

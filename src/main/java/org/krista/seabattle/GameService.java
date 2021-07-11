@@ -172,8 +172,10 @@ public class GameService implements Serializable {
                 }
                 serverTurnActions = JsonCreator.addInfoAboutDestroyedCord(serverTurnActions,coordToAttack);
 
+
             }else{
                 serverTurn = false;
+                //Добавить оповещение о победе
             }
         }
         if(serverTurnActions.isEmpty()){
