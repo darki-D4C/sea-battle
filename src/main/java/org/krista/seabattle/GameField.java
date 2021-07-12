@@ -3,11 +3,20 @@ package org.krista.seabattle;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to represent server/player field
+ */
 public class GameField {
+    /**
+     * 2d array of tiles
+     * and list of ships on field
+     */
     private int[][] field = new int[10][10];
-
     private List<BattleShip> ships = new ArrayList<>();
 
+    /**
+     * Initialize 2d array, field of tiles
+     */
     public GameField() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -20,6 +29,11 @@ public class GameField {
         return field;
     }
 
+    /**
+     * Method to update field with certain ship and mark tiles on 2d array with ships coords
+     *
+     * @param ship, to add to field
+     */
     public void updateField(BattleShip ship) {
         ships.add(ship);
         for (Coordinate cord : ship.getRemainingShipParts()) {
@@ -27,6 +41,11 @@ public class GameField {
         }
     }
 
+    /**
+     * Set ships to field and mark tiles on 2d array
+     *
+     * @param ships, to add
+     */
     public void setFieldAndShips(List<BattleShip> ships) {
         for (BattleShip ship : ships) {
             updateField(ship);
@@ -37,27 +56,35 @@ public class GameField {
         return ships;
     }
 
-    public BattleShip findShipByCord(Coordinate cord){
-        for(BattleShip ship: getShips()){
-            if(ship.getShipParts().contains(cord)){
+    /**
+     * Method to find ship by certain coord
+     *
+     * @param coord, by which to find
+     * @return found ship
+     */
+    public BattleShip findShipByCord(Coordinate coord) {
+        for (BattleShip ship : getShips()) {
+            if (ship.getShipParts().contains(coord)) {
                 return ship;
             }
         }
         return null; // Исправить потом
     }
 
+    /**
+     * Method to attack certain coord, and damage ship, which has this coord
+     *
+     * @param cord, which to attack
+     */
     public void attackCoord(Coordinate cord) {
         getField()[cord.getX()][cord.getY()] = 0;
-        // ships не null
         for (BattleShip ship : getShips()) {
-            if (ship.hasPart(cord)) { // никогда не находит координату хотя она есть в каком то из обьектов BattleShip
+            if (ship.hasPart(cord)) {
                 ship.damageShip(cord);
                 return;
-                //Check if ship has alive parts
-
             }
         }
-
     }
+
 
 }
