@@ -41,16 +41,6 @@ public class GameField {
         }
     }
 
-    /**
-     * Set ships to field and mark tiles on 2d array
-     *
-     * @param ships, to add
-     */
-    public void setFieldAndShips(List<BattleShip> ships) {
-        for (BattleShip ship : ships) {
-            updateField(ship);
-        }
-    }
 
     public List<BattleShip> getShips() {
         return ships;

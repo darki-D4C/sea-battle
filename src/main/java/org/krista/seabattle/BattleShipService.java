@@ -6,7 +6,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,10 +82,10 @@ public class BattleShipService implements Serializable {
     }
 
     @GET
-    @Produces
+    @Produces("application/json")
     @Path("/serverfield")
     public Response mockSendServerField() {
-        ArrayList<BattleShip> sev = (ArrayList<BattleShip>) gameService.getPlayerField().getShips();
+        List<BattleShip> sev = gameService.getServerField().getShips();
         return Response.ok(sev).build();
     }
 

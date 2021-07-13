@@ -20,7 +20,7 @@ public class BattleShip {
     private List<Coordinate> remainingShipParts;
 
     /**
-     * Json contructor for battleship
+     * Json constructor for battleship
      *
      * @param numberOfDecks, number of decks of the ship
      * @param shipParts,     number of decks of the ship
@@ -54,7 +54,7 @@ public class BattleShip {
      * @param countOfDecks ,  number of decks
      */
     public BattleShip(char direction, int randomX, int randomY, int countOfDecks) {
-        ArrayList<Coordinate> parts = new ArrayList<>();
+        List<Coordinate> parts = new ArrayList<>();
         this.shipParts = new ArrayList<>();
         this.remainingShipParts = new ArrayList<>();
         parts.add(new Coordinate(randomX, randomY));
@@ -106,7 +106,7 @@ public class BattleShip {
     /**
      * Check if ship has certain part.
      *
-     * @param cord, certatin part.
+     * @param cord, certain part.
      * @return status(has / no).
      */
     public boolean hasPart(Coordinate cord) {

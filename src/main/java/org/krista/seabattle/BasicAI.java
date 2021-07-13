@@ -11,8 +11,14 @@ public class BasicAI {
     /**
      * Mock versions of field and ships
      */
-    private static int[][] mockField = new int[10][10];
-    private static List<BattleShip> mockShips = new ArrayList<>();
+    private int[][] mockField;
+    private List<BattleShip> mockShips = new ArrayList<>();
+
+    public BasicAI() {
+        this.mockField = new int[10][10];
+        this.mockShips = new ArrayList<>();
+        createRandomlyGeneratedShip();
+    }
 
     public static ArrayList<BattleShip> createBasicShips() {
         ArrayList<BattleShip> ships = new ArrayList<>();
@@ -35,23 +41,22 @@ public class BasicAI {
 
     /**
      * Main method to place certain types of ships certain number of times
-     *
-     * @return generated list of ships
      */
-    public static List<BattleShip> createRandomlyGeneratedShip() {
+    public void createRandomlyGeneratedShip() {
+
+        DeployShips(1, 4);
         DeployShips(4, 1);
         DeployShips(3, 2);
         DeployShips(2, 3);
-        DeployShips(1, 4);
-        return mockShips;
+
     }
 
     /**
      * method to generate ships
      */
-    private static void DeployShips(int numberOfDecks, int maxCountOfShips) {
+    private void DeployShips(int numberOfDecks, int maxCountOfShips) {
         int countOfShip = 0;
-        int[][] field = mockField;
+        int[][] field;
         while (countOfShip < maxCountOfShips) {
             field = mockField;
             int randomX = (int) (Math.random() * 10);
@@ -72,6 +77,7 @@ public class BasicAI {
             } else {
                 ship = new BattleShip(Arrays.asList(new Coordinate(randomX, randomY)));
             }
+
             countOfShip++;
 
             updateMockField(ship);
@@ -88,7 +94,7 @@ public class BasicAI {
      * @param countOfDecks, number of decks
      * @return valid or not
      */
-    private static boolean checkCoords(int randomX, int randomY, char direction, int countOfDecks) {
+    private boolean checkCoords(int randomX, int randomY, char direction, int countOfDecks) {
         int[][] field = mockField;
 
         if (field[randomX][randomY] == 1) {
@@ -136,11 +142,14 @@ public class BasicAI {
      *
      * @param ship
      */
-    private static void updateMockField(BattleShip ship) {
+    private void updateMockField(BattleShip ship) {
         mockShips.add(ship);
         for (Coordinate coord : ship.getShipParts()) {
             mockField[coord.getX()][coord.getY()] = 1;
         }
     }
 
+    public List<BattleShip> getShips() {
+        return mockShips;
+    }
 }
