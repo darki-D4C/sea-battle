@@ -1,18 +1,18 @@
 package org.krista.seabattle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Class to represent AI for placing ships
+ * Class to represent AI for placing ships.
  */
 public class BasicAI {
     /**
-     * Mock versions of field and ships
+     * Mock versions of field and ships.
      */
-    private int[][] mockField;
-    private List<BattleShip> mockShips = new ArrayList<>();
+    private final int[][] mockField;
+    private final List<BattleShip> mockShips;
 
     public BasicAI() {
         this.mockField = new int[10][10];
@@ -20,39 +20,19 @@ public class BasicAI {
         createRandomlyGeneratedShip();
     }
 
-    public static ArrayList<BattleShip> createBasicShips() {
-        ArrayList<BattleShip> ships = new ArrayList<>();
-
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(9, 0)))));
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(1, 8)))));
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(7, 7)))));
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(1, 4)))));
-
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(1, 2), new Coordinate(2, 2)))));
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(5, 3), new Coordinate(5, 4)))));
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(5, 9), new Coordinate(6, 9)))));
-
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(3, 5), new Coordinate(3, 6), new Coordinate(3, 7)))));
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(1, 0), new Coordinate(2, 0), new Coordinate(3, 0)))));
-        ships.add(new BattleShip((Arrays.asList(new Coordinate(7, 2), new Coordinate(7, 3), new Coordinate(7, 4), new Coordinate(7, 5)))));
-
-        return ships;
-    }
 
     /**
-     * Main method to place certain types of ships certain number of times
+     * Main method to place certain types of ships certain number of times.
      */
     public void createRandomlyGeneratedShip() {
-
         DeployShips(1, 4);
         DeployShips(4, 1);
         DeployShips(3, 2);
         DeployShips(2, 3);
-
     }
 
     /**
-     * method to generate ships
+     * Method to generate ships.
      */
     private void DeployShips(int numberOfDecks, int maxCountOfShips) {
         int countOfShip = 0;
@@ -71,11 +51,11 @@ public class BasicAI {
                 direction = randomDirection == 0 ? 'n' : randomDirection == 1 ? 'e' : randomDirection == 2 ? 's' : 'w';
             }
 
-            BattleShip ship = null;
+            BattleShip ship;
             if (numberOfDecks > 1) {
                 ship = new BattleShip(direction, randomX, randomY, numberOfDecks);
             } else {
-                ship = new BattleShip(Arrays.asList(new Coordinate(randomX, randomY)));
+                ship = new BattleShip(Collections.singletonList(new Coordinate(randomX, randomY)));
             }
 
             countOfShip++;
@@ -86,12 +66,12 @@ public class BasicAI {
     }
 
     /**
-     * Method to check wether coord is valid
+     * Method to check whether coord is valid.
      *
-     * @param randomX       , x
-     * @param randomY,      y
-     * @param direction,    direction
-     * @param countOfDecks, number of decks
+     * @param randomX      x
+     * @param randomY      y
+     * @param direction    direction
+     * @param countOfDecks number of decks
      * @return valid or not
      */
     private boolean checkCoords(int randomX, int randomY, char direction, int countOfDecks) {
@@ -129,9 +109,6 @@ public class BasicAI {
                     if (randomX < 0) return false;
                     if (field[randomX][randomY] == 1) return false;
                     break;
-                default:
-                    System.out.println("Some thing is wrong!");
-                    break;
             }
         }
         return true;
@@ -140,7 +117,7 @@ public class BasicAI {
     /**
      * Update mock field and ships
      *
-     * @param ship
+     * @param ship ship to update field with
      */
     private void updateMockField(BattleShip ship) {
         mockShips.add(ship);

@@ -12,10 +12,17 @@ import java.util.Arrays;
 public class TestBattleShip {
 
     @Test
-    public void damageShipTest() {
+    public void damageShipTestActual() {
         BattleShip testShip = new BattleShip(Arrays.asList(new Coordinate(0, 0), new Coordinate(0, 1)));
         testShip.damageShip(new Coordinate(0, 1));
         assertThat(testShip.getNumberOfDecks()).isEqualTo(1);
+    }
+
+    @Test
+    public void damageShipTestActualNotExist() {
+        BattleShip testShip = new BattleShip(Arrays.asList(new Coordinate(0, 0), new Coordinate(0, 1)));
+        testShip.damageShip(new Coordinate(1, 1));
+        assertThat(testShip.getNumberOfDecks()).isEqualTo(2);
     }
 
     @Test

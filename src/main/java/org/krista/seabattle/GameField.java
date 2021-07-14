@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to represent server/player field
+ * Class to represent server/player field.
  */
 public class GameField {
     /**
      * 2d array of tiles
-     * and list of ships on field
+     * and list of ships on field.
      */
-    private int[][] field = new int[10][10];
-    private List<BattleShip> ships = new ArrayList<>();
+    private final int[][] field = new int[10][10];
+    private final List<BattleShip> ships = new ArrayList<>();
 
     /**
-     * Initialize 2d array, field of tiles
+     * Initialize 2d array, field of tiles.
      */
     public GameField() {
         for (int i = 0; i < 10; i++) {
@@ -30,9 +30,9 @@ public class GameField {
     }
 
     /**
-     * Method to update field with certain ship and mark tiles on 2d array with ships coords
+     * Method to update field with certain ship and mark tiles on 2d array with ships coords.
      *
-     * @param ship, to add to field
+     * @param ship to add to field
      */
     public void updateField(BattleShip ship) {
         ships.add(ship);
@@ -47,9 +47,9 @@ public class GameField {
     }
 
     /**
-     * Method to find ship by certain coord
+     * Method to find ship by certain coord.
      *
-     * @param coord, by which to find
+     * @param coord by which to find
      * @return found ship
      */
     public BattleShip findShipByCord(Coordinate coord) {
@@ -62,11 +62,14 @@ public class GameField {
     }
 
     /**
-     * Method to attack certain coord, and damage ship, which has this coord
+     * Method to attack certain coord, and damage ship, which has this coord.
      *
-     * @param cord, which to attack
+     * @param cord which to attack
      */
     public void attackCoord(Coordinate cord) {
+        if (!cord.checkValidity()) {
+            return;
+        }
         getField()[cord.getX()][cord.getY()] = 0;
         for (BattleShip ship : getShips()) {
             if (ship.hasPart(cord)) {
@@ -77,4 +80,12 @@ public class GameField {
     }
 
 
+    public void clearSelf() {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                field[i][j] = 0;
+            }
+        }
+        this.ships.clear();
+    }
 }

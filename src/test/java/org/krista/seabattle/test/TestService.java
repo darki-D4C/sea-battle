@@ -4,10 +4,8 @@ import org.junit.Test;
 import org.krista.seabattle.BasicAI;
 import org.krista.seabattle.BattleShip;
 import org.krista.seabattle.GameService;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import static org.assertj.core.api.Assertions.*;
 
 public class TestService {
@@ -19,7 +17,7 @@ public class TestService {
     }
 
     @Test
-    public void aiPlacementShipsTest() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
+    public void aiPlacementShipsTest() throws  NoSuchMethodException, InvocationTargetException,
             IllegalAccessException {
         BasicAI aiTest = new BasicAI();
         Method checkShip = GameService.class.getDeclaredMethod(

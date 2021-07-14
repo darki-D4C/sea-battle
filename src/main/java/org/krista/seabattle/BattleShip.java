@@ -1,29 +1,27 @@
 package org.krista.seabattle;
 
-import javax.enterprise.inject.Default;
-import javax.inject.Inject;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to represent battleships
+ * Class to represent battleships.
  */
 public class BattleShip {
     @JsonbProperty("shipParts")
-    private List<Coordinate> shipParts;
+    private final List<Coordinate> shipParts;
 
     @JsonbProperty("numberOfDecks")
     private int numberOfDecks;
 
-    private List<Coordinate> remainingShipParts;
+    private final List<Coordinate> remainingShipParts;
 
     /**
-     * Json constructor for battleship
+     * Json constructor for battleship.
      *
-     * @param numberOfDecks, number of decks of the ship
-     * @param shipParts,     number of decks of the ship
+     * @param numberOfDecks number of decks of the ship
+     * @param shipParts     number of decks of the ship
      */
     @JsonbCreator
     public BattleShip(@JsonbProperty("numberOfDecks") int numberOfDecks, @JsonbProperty("shipParts") List<Coordinate> shipParts) {
@@ -34,9 +32,9 @@ public class BattleShip {
     }
 
     /**
-     * Battleship constructor with only parts and number of decks
+     * Battleship constructor with only parts and number of decks.
      *
-     * @param coords, parts of ship
+     * @param coords parts of ship
      */
     public BattleShip(List<Coordinate> coords) {
         this.shipParts = coords;
@@ -46,12 +44,12 @@ public class BattleShip {
     }
 
     /**
-     * Constructor for battleships with direction
+     * Constructor for battleships with direction.
      *
-     * @param direction,   direction
-     * @param randomX      , x
-     * @param randomY      , y
-     * @param countOfDecks ,  number of decks
+     * @param direction    direction
+     * @param randomX      x
+     * @param randomY      y
+     * @param countOfDecks number of decks
      */
     public BattleShip(char direction, int randomX, int randomY, int countOfDecks) {
         List<Coordinate> parts = new ArrayList<>();
@@ -76,8 +74,6 @@ public class BattleShip {
                     randomX--;
                     parts.add(new Coordinate(randomX, randomY));
                     break;
-                default:
-                    System.out.println("Something is wrong!");
             }
         }
         this.shipParts.addAll(parts);
@@ -88,9 +84,12 @@ public class BattleShip {
     /**
      * Method to damage ship.
      *
-     * @param cord, which was damaged.
+     * @param cord which was damaged.
      */
     public void damageShip(Coordinate cord) {
+        if (!getShipParts().contains(cord)) {
+            return;
+        }
         this.numberOfDecks--;
         this.remainingShipParts.remove(cord); //Ship damaged,remove damaged deck
     }
@@ -106,7 +105,7 @@ public class BattleShip {
     /**
      * Check if ship has certain part.
      *
-     * @param cord, certain part.
+     * @param cord certain part.
      * @return status(has / no).
      */
     public boolean hasPart(Coordinate cord) {

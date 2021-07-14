@@ -2,15 +2,16 @@ package org.krista.seabattle;
 
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
+import java.util.Objects;
 
 /**
  * Class to represent the coordinates for tiles.
  */
 public class Coordinate {
     @JsonbProperty("x")
-    private int x;
+    private final int x;
     @JsonbProperty("y")
-    private int y;
+    private final int y;
 
     @JsonbCreator
     public Coordinate(@JsonbProperty("x") int x, @JsonbProperty("y") int y) {
@@ -50,7 +51,11 @@ public class Coordinate {
 
     @Override
     public int hashCode() {
-        return 31 + (x * 5 / (y + 1)) * 2;
+        return Objects.hash();
     }
 
+
+    public boolean checkValidity() {
+        return getX() >= 0 && getY() >= 0 && getX() <= 9 && getY() <= 9;
+    }
 }
