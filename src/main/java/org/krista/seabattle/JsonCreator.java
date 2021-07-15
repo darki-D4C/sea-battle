@@ -39,7 +39,7 @@ public class JsonCreator {
      */
     public static JsonArray returnInfoAboutCompleteMiss(Coordinate missedCoordPlayer) {
 
-        return Json.createArrayBuilder().add(Json.createObjectBuilder().add("both_missed", Json.createObjectBuilder().add("x",missedCoordPlayer.getX()).add("y",missedCoordPlayer.getY()).build()).build()).build();
+        return Json.createArrayBuilder().add(Json.createObjectBuilder().add("both_missed", Json.createObjectBuilder().add("x", missedCoordPlayer.getX()).add("y", missedCoordPlayer.getY()).build()).build()).build();
     }
 
     /**
@@ -73,18 +73,18 @@ public class JsonCreator {
 
     public static JsonArray returnInfoAboutDestroyedCoordByPlayer(Coordinate coord) {
         JsonArrayBuilder json = Json.createArrayBuilder();
-        JsonObject side = Json.createObjectBuilder().add("side","player").build();
+        JsonObject side = Json.createObjectBuilder().add("side", "player").build();
         json.add(side);
-        JsonObject coordJson = Json.createObjectBuilder().add("x",coord.getX()).add("y",coord.getY()).build();
+        JsonObject coordJson = Json.createObjectBuilder().add("x", coord.getX()).add("y", coord.getY()).build();
         json.add(coordJson);
         return json.build();
     }
 
     public static JsonArray returnInfoAboutDestroyedShipByPlayer(BattleShip ship) {
         JsonArrayBuilder json = Json.createArrayBuilder();
-        JsonObject side = Json.createObjectBuilder().add("side","player").build();
+        JsonObject side = Json.createObjectBuilder().add("side", "player").build();
         json.add(side);
-        JsonObject arrayOfParts = Json.createObjectBuilder().add("shipParts",markShips(ship.getShipParts())).build();
+        JsonObject arrayOfParts = Json.createObjectBuilder().add("shipParts", markShips(ship.getShipParts())).build();
         json.add(arrayOfParts);
         return json.build();
     }

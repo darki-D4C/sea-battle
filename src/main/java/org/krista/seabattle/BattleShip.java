@@ -5,6 +5,9 @@ import javax.json.bind.annotation.JsonbProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.krista.seabattle.Position.HORIZONTAL;
+import static org.krista.seabattle.Position.VERTICAL;
+
 /**
  * Class to represent battleships.
  */
@@ -20,28 +23,16 @@ public class BattleShip {
     /**
      * Json constructor for battleship.
      *
-     * @param numberOfDecks number of decks of the ship
      * @param shipParts     number of decks of the ship
      */
     @JsonbCreator
-    public BattleShip(@JsonbProperty("numberOfDecks") int numberOfDecks, @JsonbProperty("shipParts") List<Coordinate> shipParts) {
-        this.numberOfDecks = numberOfDecks;
+    public BattleShip(@JsonbProperty("shipParts") List<Coordinate> shipParts) {
+        this.numberOfDecks = shipParts.size();
         this.shipParts = shipParts;
         this.remainingShipParts = new ArrayList<>();
         this.remainingShipParts.addAll(shipParts);
     }
 
-    /**
-     * Battleship constructor with only parts and number of decks.
-     *
-     * @param coords parts of ship
-     */
-    public BattleShip(List<Coordinate> coords) {
-        this.shipParts = coords;
-        this.numberOfDecks = coords.size();
-        this.remainingShipParts = new ArrayList<>();
-        this.remainingShipParts.addAll(coords);
-    }
 
     /**
      * Constructor for battleships with direction.
@@ -51,29 +42,19 @@ public class BattleShip {
      * @param randomY      y
      * @param countOfDecks number of decks
      */
-    public BattleShip(char direction, int randomX, int randomY, int countOfDecks) {
+    public BattleShip(Position direction, int randomX, int randomY, int countOfDecks) {
         List<Coordinate> parts = new ArrayList<>();
         this.shipParts = new ArrayList<>();
         this.remainingShipParts = new ArrayList<>();
         parts.add(new Coordinate(randomX, randomY));
         for (int i = 1; i < countOfDecks; i++) {
-            switch (direction) {
-                case 'n':
-                    randomY--;
-                    parts.add(new Coordinate(randomX, randomY));
-                    break;
-                case 'e':
-                    randomX++;
-                    parts.add(new Coordinate(randomX, randomY));
-                    break;
-                case 's':
-                    randomY++;
-                    parts.add(new Coordinate(randomX, randomY));
-                    break;
-                case 'w':
-                    randomX--;
-                    parts.add(new Coordinate(randomX, randomY));
-                    break;
+            if (direction == VERTICAL) {
+                randomY++;
+                parts.add(new Coordinate(randomX, randomY));
+            }
+            if (direction == HORIZONTAL) {
+                randomX++;
+                parts.add(new Coordinate(randomX, randomY));
             }
         }
         this.shipParts.addAll(parts);

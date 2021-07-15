@@ -8,9 +8,9 @@ import java.util.Objects;
  * Class to represent the coordinates for tiles.
  */
 public class Coordinate {
-    @JsonbProperty("x")
+
     private final int x;
-    @JsonbProperty("y")
+
     private final int y;
 
     @JsonbCreator
@@ -55,7 +55,5 @@ public class Coordinate {
     }
 
 
-    public boolean checkValidity() {
-        return getX() >= 0 && getY() >= 0 && getX() <= 9 && getY() <= 9;
-    }
+
 }

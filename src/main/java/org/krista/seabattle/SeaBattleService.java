@@ -6,6 +6,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class SeaBattleService implements Serializable {
      */
     @GET
     @Path("/start")
-    public Response startGame() {
+    public Response startGame() throws NoSuchAlgorithmException {
         gameService.clearFields();
         gameService.setStatus(GameStatus.NOT_STARTED);
         gameService.generateRandomShipsAndPlaceThem();
@@ -39,14 +40,14 @@ public class SeaBattleService implements Serializable {
     /**
      * POST request for attacking server.
      *
-     * @param cord coordinate to attack
+     * @param coord coordinate to attack
      * @return status of attack, either complete miss, successfully attacked coord by player or chain of attacks by server
      */
     @POST
     @Consumes("application/json")
     @Path("/attack")
-    public Object attackServerField(Coordinate cord) {
-        if(!cord.checkValidity()){
+    public Object attackServerField(Coordinate coord) {
+        if(gameService.getPlayerField().checkValidity(coord)){
             return Response.ok("\"coordinate\":\"invalid\"").build();
         }
         GameStatus currentStatus = gameService.getStatus();
@@ -61,19 +62,19 @@ public class SeaBattleService implements Serializable {
                 return JsonCreator.notifyAboutVictory("server");
         }
 
-        if (gameService.checkServerCoord(cord)) {
-            gameService.getServerField().attackCoord(cord);
+        if (gameService.checkServerCoord(coord)) {
+            gameService.getServerField().attackCoord(coord);
             if (gameService.checkGameOver("server")) {
                 gameService.setStatus(GameStatus.FINISHED_P);
                 return JsonCreator.notifyAboutVictory("player");
             }
-            if (gameService.getServerField().findShipByCord(cord).getNumberOfDecks() == 0) {
+            if (gameService.getServerField().findShipByCord(coord).getNumberOfDecks() == 0) {
                 return JsonCreator.returnInfoAboutDestroyedShipByPlayer(gameService.getServerField().
-                        findShipByCord(cord));
+                        findShipByCord(coord));
             }
-            return JsonCreator.returnInfoAboutDestroyedCoordByPlayer(cord);
+            return JsonCreator.returnInfoAboutDestroyedCoordByPlayer(coord);
         } else {
-            JsonArray attack = gameService.attackPlayerField(cord);
+            JsonArray attack = gameService.attackPlayerField(coord);
             if (gameService.checkGameOver("player")) {
                 gameService.setStatus(GameStatus.FINISHED_S);
                 return JsonCreator.notifyAboutVictory("server");

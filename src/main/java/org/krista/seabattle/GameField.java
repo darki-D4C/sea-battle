@@ -64,16 +64,16 @@ public class GameField {
     /**
      * Method to attack certain coord, and damage ship, which has this coord.
      *
-     * @param cord which to attack
+     * @param coord which to attack
      */
-    public void attackCoord(Coordinate cord) {
-        if (!cord.checkValidity()) {
+    public void attackCoord(Coordinate coord) {
+        if (checkValidity(coord)) {
             return;
         }
-        getField()[cord.getX()][cord.getY()] = 0;
+        getField()[coord.getX()][coord.getY()] = 0;
         for (BattleShip ship : getShips()) {
-            if (ship.hasPart(cord)) {
-                ship.damageShip(cord);
+            if (ship.hasPart(coord)) {
+                ship.damageShip(coord);
                 return;
             }
         }
@@ -87,5 +87,9 @@ public class GameField {
             }
         }
         this.ships.clear();
+    }
+
+    public boolean checkValidity(Coordinate coord) {
+        return !(coord.getX() >= 0 && coord.getY() >= 0 && coord.getX() <= 9 && coord.getY() <= 9);
     }
 }

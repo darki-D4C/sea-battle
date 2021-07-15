@@ -1,0 +1,117 @@
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: antiquewhite;
+}
+
+header {
+    font-size: 20px;
+    display: block;
+    text-align: center;
+    margin-top: 1%;
+}
+
+header h1 {
+    font-size: 60px;
+    margin-bottom: 1%;
+}
+
+nav {
+    text-align: right;
+}
+
+a.brand_name {
+    display: inline;
+    text-align: right;
+}
+
+ul {
+    list-style-type: none;
+    margin: 3%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    overflow: hidden;
+}
+
+li {
+    display: inline;
+    margin-left: 3%;
+}
+
+main {
+    text-align: center;
+    height: auto;
+}
+
+.field {
+    display: inline-block;
+    float: none;
+    margin: 5% 10% 10%;
+    margin-top: 2%;
+}
+
+#enemy_field {
+    margin-right: 0;
+}
+
+#player_field {
+    margin-left: 0;
+}
+
+#turn_block {
+    margin-bottom: 30%;
+    font-size: 30px;
+}
+
+.info_block {
+    margin-top: 10%;
+    display: inline-block;
+}
+
+.field td {
+    width: 30px;
+    height: 30px;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+.mainLogicRow {
+    padding-top: -3%;
+    display: flex;
+    justify-content: space-between;
+    height: 500px;
+}
+
+.field_name {
+    font-size: 40px;
+}
+
+.timeBlock {
+    font-size: 20px;
+}
+
+.control_button {
+    background-color: wheat;
+    border-radius: 10px;
+    border: 1px solid black;
+    display: inline-block;
+    cursor: pointer;
+    color: black;
+    font-size: 20px;
+    padding: 12px 37px;
+    text-decoration: none;
+}
+
+.control_button:hover {
+    background: bisque;
+}
+
+.control_button:active {
+    position: relative;
+    top: 1px;
+}
+
+.placeShipsBlock {
+
+}

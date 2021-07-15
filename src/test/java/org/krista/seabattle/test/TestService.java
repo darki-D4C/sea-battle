@@ -6,19 +6,21 @@ import org.krista.seabattle.BattleShip;
 import org.krista.seabattle.GameService;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.NoSuchAlgorithmException;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class TestService {
 
     @Test
-    public void aiPlacementSizeTest() {
+    public void aiPlacementSizeTest() throws NoSuchAlgorithmException {
         BasicAI aiTest = new BasicAI();
         assertThat(aiTest.getShips().size()).isEqualTo(10);
     }
 
     @Test
-    public void aiPlacementShipsTest() throws  NoSuchMethodException, InvocationTargetException,
-            IllegalAccessException {
+    public void aiPlacementShipsTest() throws NoSuchMethodException, InvocationTargetException,
+            IllegalAccessException, NoSuchAlgorithmException {
         BasicAI aiTest = new BasicAI();
         Method checkShip = GameService.class.getDeclaredMethod(
                 "checkShip", BattleShip.class);
