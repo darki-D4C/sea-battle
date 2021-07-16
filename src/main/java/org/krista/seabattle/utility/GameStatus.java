@@ -1,4 +1,4 @@
-package org.krista.seabattle;
+package org.krista.seabattle.utility;
 
 public enum GameStatus {
     NOT_STARTED,

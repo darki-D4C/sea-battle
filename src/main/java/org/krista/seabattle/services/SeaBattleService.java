@@ -1,12 +1,18 @@
-package org.krista.seabattle;
+package org.krista.seabattle.services;
+
+import org.krista.seabattle.classes.BattleShip;
+import org.krista.seabattle.classes.Coordinate;
+import org.krista.seabattle.utility.GameStatus;
+import org.krista.seabattle.utility.JsonCreator;
 
 import javax.inject.Inject;
+import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -30,7 +36,7 @@ public class SeaBattleService implements Serializable {
      */
     @GET
     @Path("/start")
-    public Response startGame() throws NoSuchAlgorithmException {
+    public Response startGame() {
         gameService.clearFields();
         gameService.setStatus(GameStatus.NOT_STARTED);
         gameService.generateRandomShipsAndPlaceThem();
@@ -44,10 +50,9 @@ public class SeaBattleService implements Serializable {
      * @return status of attack, either complete miss, successfully attacked coord by player or chain of attacks by server
      */
     @POST
-    @Consumes("application/json")
     @Path("/attack")
     public Object attackServerField(Coordinate coord) {
-        if(gameService.getPlayerField().checkValidity(coord)){
+        if (gameService.getPlayerField().checkValidity(coord)) {
             return Response.ok("\"coordinate\":\"invalid\"").build();
         }
         GameStatus currentStatus = gameService.getStatus();
@@ -60,6 +65,8 @@ public class SeaBattleService implements Serializable {
                 return Response.ok("\"status\":\"not_started\"");
             case FINISHED_S:
                 return JsonCreator.notifyAboutVictory("server");
+            default:
+                return Json.createObjectBuilder().add("status","error").build();
         }
 
         if (gameService.checkServerCoord(coord)) {
@@ -70,16 +77,38 @@ public class SeaBattleService implements Serializable {
             }
             if (gameService.getServerField().findShipByCord(coord).getNumberOfDecks() == 0) {
                 return JsonCreator.returnInfoAboutDestroyedShipByPlayer(gameService.getServerField().
-                        findShipByCord(coord));
+                        findShipByCord(coord).getShipParts());
             }
             return JsonCreator.returnInfoAboutDestroyedCoordByPlayer(coord);
         } else {
-            JsonArray attack = gameService.attackPlayerField(coord);
+
+            JsonArrayBuilder serverTurnActions = Json.createArrayBuilder();
+            serverTurnActions.add(Json.createObjectBuilder().add("missed", Json.createObjectBuilder().
+                    add("x", coord.getX()).add("y", coord.getY()).build()).build());
+            serverTurnActions.add(Json.createObjectBuilder().add("side", "server").build());
+
+            List<Coordinate> attack = gameService.attackPlayerField();
+            while (!attack.isEmpty()) {
+                if (attack.size() == 1) {
+                    if (gameService.getPlayerField().findShipByCord(attack.get(0)).getNumberOfDecks() == 0) {
+                        JsonCreator.addInfoAboutDestroyedShip(serverTurnActions, gameService.getPlayerField().findShipByCord(attack.get(0)));
+                    } else {
+                        JsonCreator.addInfoAboutDestroyedCord(serverTurnActions, attack.get(0));
+                    }
+                }
+                if (attack.size() > 1) {
+                    JsonCreator.addInfoAboutDestroyedShip(serverTurnActions, gameService.getPlayerField().findShipByCord(attack.get(0)));
+                }
+            }
+            JsonArray serverTurn = serverTurnActions.build();
+            if ((serverTurn.size() - 2) == 0) {
+                return JsonCreator.returnInfoAboutCompleteMiss(coord);
+            }
             if (gameService.checkGameOver("player")) {
                 gameService.setStatus(GameStatus.FINISHED_S);
                 return JsonCreator.notifyAboutVictory("server");
             }
-            return attack;
+            return serverTurn;
         }
 
 
@@ -92,7 +121,6 @@ public class SeaBattleService implements Serializable {
      * @return status of received field, either valid or invalid
      */
     @POST
-    @Consumes("application/json")
     @Path("/field")
     public Response sendPlayerField(List<BattleShip> ships) {
         if (gameService.getStatus() != GameStatus.NOT_STARTED) {

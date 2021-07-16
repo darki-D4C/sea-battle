@@ -4,9 +4,9 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-import org.krista.seabattle.BattleShip;
-import org.krista.seabattle.Coordinate;
-import org.krista.seabattle.GameField;
+import org.krista.seabattle.classes.BattleShip;
+import org.krista.seabattle.classes.Coordinate;
+import org.krista.seabattle.classes.GameField;
 
 import java.util.Arrays;
 

@@ -1,29 +1,27 @@
-package org.krista.seabattle;
+package org.krista.seabattle.classes;
+
+import org.krista.seabattle.utility.Position;
 
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.krista.seabattle.Position.HORIZONTAL;
-import static org.krista.seabattle.Position.VERTICAL;
+import static org.krista.seabattle.utility.Position.HORIZONTAL;
+import static org.krista.seabattle.utility.Position.VERTICAL;
 
 /**
  * Class to represent battleships.
  */
 public class BattleShip {
-    @JsonbProperty("shipParts")
     private final List<Coordinate> shipParts;
-
-    @JsonbProperty("numberOfDecks")
     private int numberOfDecks;
-
     private final List<Coordinate> remainingShipParts;
 
     /**
      * Json constructor for battleship.
      *
-     * @param shipParts     number of decks of the ship
+     * @param shipParts number of decks of the ship
      */
     @JsonbCreator
     public BattleShip(@JsonbProperty("shipParts") List<Coordinate> shipParts) {

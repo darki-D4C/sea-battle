@@ -3,8 +3,8 @@ package org.krista.seabattle.test;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.Test;
-import org.krista.seabattle.BattleShip;
-import org.krista.seabattle.Coordinate;
+import org.krista.seabattle.classes.BattleShip;
+import org.krista.seabattle.classes.Coordinate;
 
 import java.util.Arrays;
 

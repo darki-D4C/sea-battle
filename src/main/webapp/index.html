@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Simple Sea Battle</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <script src="mainScript.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<header>
+    <nav>
+        <ul class="nav_bar">
+            <li>
+                Help
+            </li>
+            <li>
+                <a href="">Results</a>
+            </li>
+            <li>
+                Start over
+            </li>
+        </ul>
+    </nav>
+    <h1>Simple Sea Battle!</h1>
+
+</header>
+
+<main>
+    <div class="timeBlock">
+        <div id="time_label">
+            Time:
+        </div>
+        <div id="timer">
+            00:00
+        </div>
+    </div>
+    <div class="game">
+        <div class="mainLogicRow">
+            <div class="field" id="enemy_field">
+                <h2 class="field_name">
+                    Enemy field
+                </h2>
+                <table>
+                    <tr>
+                        <td>SB</td>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>E</td>
+                        <td>F</td>
+                        <td>G</td>
+                        <td>I</td>
+                        <td>J</td>
+                        <td>K</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td data-x="0" data-y="0"></td>
+                        <td data-x="1" data-y="0"></td>
+                        <td data-x="2" data-y="0"></td>
+                        <td data-x="3" data-y="0"></td>
+                        <td data-x="4" data-y="0"></td>
+                        <td data-x="5" data-y="0"></td>
+                        <td data-x="6" data-y="0"></td>
+                        <td data-x="7" data-y="0"></td>
+                        <td data-x="8" data-y="0"></td>
+                        <td data-x="9" data-y="0"></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td data-x="0" data-y="1"></td>
+                        <td data-x="1" data-y="1"></td>
+                        <td data-x="2" data-y="1"></td>
+                        <td data-x="3" data-y="1"></td>
+                        <td data-x="4" data-y="1"></td>
+                        <td data-x="5" data-y="1"></td>
+                        <td data-x="6" data-y="1"></td>
+                        <td data-x="7" data-y="1"></td>
+                        <td data-x="8" data-y="1"></td>
+                        <td data-x="9" data-y="1"></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td data-x="0" data-y="2"></td>
+                        <td data-x="1" data-y="2"></td>
+                        <td data-x="2" data-y="2"></td>
+                        <td data-x="3" data-y="2"></td>
+                        <td data-x="4" data-y="2"></td>
+                        <td data-x="5" data-y="2"></td>
+                        <td data-x="6" data-y="2"></td>
+                        <td data-x="7" data-y="2"></td>
+                        <td data-x="8" data-y="2"></td>
+                        <td data-x="9" data-y="2"></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td data-x="0" data-y="3"></td>
+                        <td data-x="1" data-y="3"></td>
+                        <td data-x="2" data-y="3"></td>
+                        <td data-x="3" data-y="3"></td>
+                        <td data-x="4" data-y="3"></td>
+                        <td data-x="5" data-y="3"></td>
+                        <td data-x="6" data-y="3"></td>
+                        <td data-x="7" data-y="3"></td>
+                        <td data-x="8" data-y="3"></td>
+                        <td data-x="9" data-y="3"></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td data-x="0" data-y="4"></td>
+                        <td data-x="1" data-y="4"></td>
+                        <td data-x="2" data-y="4"></td>
+                        <td data-x="3" data-y="4"></td>
+                        <td data-x="4" data-y="4"></td>
+                        <td data-x="5" data-y="4"></td>
+                        <td data-x="6" data-y="4"></td>
+                        <td data-x="7" data-y="4"></td>
+                        <td data-x="8" data-y="4"></td>
+                        data-
+                        <td data-x="9" data-y="4"></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td data-x="0" data-y="5"></td>
+                        <td data-x="1" data-y="5"></td>
+                        <td data-x="2" data-y="5"></td>
+                        <td data-x="3" data-y="5"></td>
+                        <td data-x="4" data-y="5"></td>
+                        <td data-x="5" data-y="5"></td>
+                        <td data-x="6" data-y="5"></td>
+                        <td data-x="7" data-y="5"></td>
+                        <td data-x="8" data-y="5"></td>
+                        <td data-x="9" data-y="5"></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td data-x="0" data-y="6"></td>
+                        <td data-x="1" data-y="6"></td>
+                        <td data-x="2" data-y="6"></td>
+                        <td data-x="3" data-y="6"></td>
+                        <td data-x="4" data-y="6"></td>
+                        <td data-x="5" data-y="6"></td>
+                        <td data-x="6" data-y="6"></td>
+                        <td data-x="7" data-y="6"></td>
+                        <td data-x="8" data-y="6"></td>
+                        <td data-x="9" data-y="6"></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td data-x="0" data-y="7"></td>
+                        <td data-x="1" data-y="7"></td>
+                        <td data-x="2" data-y="7"></td>
+                        <td data-x="3" data-y="7"></td>
+                        <td data-x="4" data-y="7"></td>
+                        <td data-x="5" data-y="7"></td>
+                        <td data-x="6" data-y="7"></td>
+                        <td data-x="7" data-y="7"></td>
+                        <td data-x="8" data-y="7"></td>
+                        <td data-x="9" data-y="7"></td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td data-x="0" data-y="8"></td>
+                        <td data-x="1" data-y="8"></td>
+                        <td data-x="2" data-y="8"></td>
+                        <td data-x="3" data-y="8"></td>
+                        <td data-x="4" data-y="8"></td>
+                        <td data-x="5" data-y="8"></td>
+                        <td data-x="6" data-y="8"></td>
+                        <td data-x="7" data-y="8"></td>
+                        <td data-x="8" data-y="8"></td>
+                        <td data-x="9" data-y="8"></td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td data-x="0" data-y="9"></td>
+                        <td data-x="1" data-y="9"></td>
+                        <td data-x="2" data-y="9"></td>
+                        <td data-x="3" data-y="9"></td>
+                        <td data-x="4" data-y="9"></td>
+                        <td data-x="5" data-y="9"></td>
+                        <td data-x="6" data-y="9"></td>
+                        <td data-x="7" data-y="9"></td>
+                        <td data-x="8" data-y="9"></td>
+                        <td data-x="9" data-y="9"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="info_block">
+                <div id="turn_block">
+                    Somebody's turn
+                </div>
+
+                <div class="recent_events_block">
+                    <h3>
+                        Recent events
+                    </h3>
+                    <div id="event">
+                        Player destroyed tile at A4
+                    </div>
+                </div>
+            </div>
+            <div class="field" id="player_field">
+                <h2 class="field_name">
+                    Player field
+                </h2>
+                <table>
+                    <tr>
+                        <td>SB</td>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>E</td>
+                        <td>F</td>
+                        <td>G</td>
+                        <td>I</td>
+                        <td>J</td>
+                        <td>K</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td data-x="0" data-y="0"></td>
+                        <td data-x="1" data-y="0"></td>
+                        <td data-x="2" data-y="0"></td>
+                        <td data-x="3" data-y="0"></td>
+                        <td data-x="4" data-y="0"></td>
+                        <td data-x="5" data-y="0"></td>
+                        <td data-x="6" data-y="0"></td>
+                        <td data-x="7" data-y="0"></td>
+                        <td data-x="8" data-y="0"></td>
+                        <td data-x="9" data-y="0"></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td data-x="0" data-y="1"></td>
+                        <td data-x="1" data-y="1"></td>
+                        <td data-x="2" data-y="1"></td>
+                        <td data-x="3" data-y="1"></td>
+                        <td data-x="4" data-y="1"></td>
+                        <td data-x="5" data-y="1"></td>
+                        <td data-x="6" data-y="1"></td>
+                        <td data-x="7" data-y="1"></td>
+                        <td data-x="8" data-y="1"></td>
+                        <td data-x="9" data-y="1"></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td data-x="0" data-y="2"></td>
+                        <td data-x="1" data-y="2"></td>
+                        <td data-x="2" data-y="2"></td>
+                        <td data-x="3" data-y="2"></td>
+                        <td data-x="4" data-y="2"></td>
+                        <td data-x="5" data-y="2"></td>
+                        <td data-x="6" data-y="2"></td>
+                        <td data-x="7" data-y="2"></td>
+                        <td data-x="8" data-y="2"></td>
+                        <td data-x="9" data-y="2"></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td data-x="0" data-y="3"></td>
+                        <td data-x="1" data-y="3"></td>
+                        <td data-x="2" data-y="3"></td>
+                        <td data-x="3" data-y="3"></td>
+                        <td data-x="4" data-y="3"></td>
+                        <td data-x="5" data-y="3"></td>
+                        <td data-x="6" data-y="3"></td>
+                        <td data-x="7" data-y="3"></td>
+                        <td data-x="8" data-y="3"></td>
+                        <td data-x="9" data-y="3"></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td data-x="0" data-y="4"></td>
+                        <td data-x="1" data-y="4"></td>
+                        <td data-x="2" data-y="4"></td>
+                        <td data-x="3" data-y="4"></td>
+                        <td data-x="4" data-y="4"></td>
+                        <td data-x="5" data-y="4"></td>
+                        <td data-x="6" data-y="4"></td>
+                        <td data-x="7" data-y="4"></td>
+                        <td data-x="8" data-y="4"></td>
+                        data-
+                        <td data-x="9" data-y="4"></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td data-x="0" data-y="5"></td>
+                        <td data-x="1" data-y="5"></td>
+                        <td data-x="2" data-y="5"></td>
+                        <td data-x="3" data-y="5"></td>
+                        <td data-x="4" data-y="5"></td>
+                        <td data-x="5" data-y="5"></td>
+                        <td data-x="6" data-y="5"></td>
+                        <td data-x="7" data-y="5"></td>
+                        <td data-x="8" data-y="5"></td>
+                        <td data-x="9" data-y="5"></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td data-x="0" data-y="6"></td>
+                        <td data-x="1" data-y="6"></td>
+                        <td data-x="2" data-y="6"></td>
+                        <td data-x="3" data-y="6"></td>
+                        <td data-x="4" data-y="6"></td>
+                        <td data-x="5" data-y="6"></td>
+                        <td data-x="6" data-y="6"></td>
+                        <td data-x="7" data-y="6"></td>
+                        <td data-x="8" data-y="6"></td>
+                        <td data-x="9" data-y="6"></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td data-x="0" data-y="7"></td>
+                        <td data-x="1" data-y="7"></td>
+                        <td data-x="2" data-y="7"></td>
+                        <td data-x="3" data-y="7"></td>
+                        <td data-x="4" data-y="7"></td>
+                        <td data-x="5" data-y="7"></td>
+                        <td data-x="6" data-y="7"></td>
+                        <td data-x="7" data-y="7"></td>
+                        <td data-x="8" data-y="7"></td>
+                        <td data-x="9" data-y="7"></td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td data-x="0" data-y="8"></td>
+                        <td data-x="1" data-y="8"></td>
+                        <td data-x="2" data-y="8"></td>
+                        <td data-x="3" data-y="8"></td>
+                        <td data-x="4" data-y="8"></td>
+                        <td data-x="5" data-y="8"></td>
+                        <td data-x="6" data-y="8"></td>
+                        <td data-x="7" data-y="8"></td>
+                        <td data-x="8" data-y="8"></td>
+                        <td data-x="9" data-y="8"></td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td data-x="0" data-y="9"></td>
+                        <td data-x="1" data-y="9"></td>
+                        <td data-x="2" data-y="9"></td>
+                        <td data-x="3" data-y="9"></td>
+                        <td data-x="4" data-y="9"></td>
+                        <td data-x="5" data-y="9"></td>
+                        <td data-x="6" data-y="9"></td>
+                        <td data-x="7" data-y="9"></td>
+                        <td data-x="8" data-y="9"></td>
+                        <td data-x="9" data-y="9"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div id="confirm_placement">
+                <button class="control_button" onclick="startPlacement()">
+                    Place player ships
+                </button>
+            </div>
+
+
+            <div id="cancel_placement">
+                <button class="control_button">
+                    Cancel placement
+                </button>
+            </div>
+
+            <div id>
+                <button class="control_button">
+                    Confirm placement
+                </button>
+            </div>
+
+
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

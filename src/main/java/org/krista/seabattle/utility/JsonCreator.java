@@ -1,4 +1,7 @@
-package org.krista.seabattle;
+package org.krista.seabattle.utility;
+
+import org.krista.seabattle.classes.BattleShip;
+import org.krista.seabattle.classes.Coordinate;
 
 import javax.json.*;
 import java.util.List;
@@ -7,6 +10,10 @@ import java.util.List;
  * Class to represent methods that modify json arrays.
  */
 public class JsonCreator {
+    private JsonCreator() {
+
+    }
+
     /**
      * Method to add info about destroyed ship coords to json array.
      *
@@ -80,11 +87,11 @@ public class JsonCreator {
         return json.build();
     }
 
-    public static JsonArray returnInfoAboutDestroyedShipByPlayer(BattleShip ship) {
+    public static JsonArray returnInfoAboutDestroyedShipByPlayer(List<Coordinate> parts) {
         JsonArrayBuilder json = Json.createArrayBuilder();
         JsonObject side = Json.createObjectBuilder().add("side", "player").build();
         json.add(side);
-        JsonObject arrayOfParts = Json.createObjectBuilder().add("shipParts", markShips(ship.getShipParts())).build();
+        JsonObject arrayOfParts = Json.createObjectBuilder().add("shipParts", markShips(parts)).build();
         json.add(arrayOfParts);
         return json.build();
     }

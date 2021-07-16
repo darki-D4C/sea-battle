@@ -1,18 +1,21 @@
-package org.krista.seabattle;
+package org.krista.seabattle.classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class to represent server/player field.
  */
-public class GameField {
+public class GameField implements Serializable {
     /**
      * 2d array of tiles
      * and list of ships on field.
      */
     private final int[][] field = new int[10][10];
     private final List<BattleShip> ships = new ArrayList<>();
+    private static final long serialVersionUID = 8138422039788176678L;
+
 
     /**
      * Initialize 2d array, field of tiles.

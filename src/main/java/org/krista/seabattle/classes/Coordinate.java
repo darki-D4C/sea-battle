@@ -1,16 +1,17 @@
-package org.krista.seabattle;
+package org.krista.seabattle.classes;
 
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Class to represent the coordinates for tiles.
  */
-public class Coordinate {
+public class Coordinate implements Serializable {
+    private static final long serialVersionUID = 6223692443075652319L;
 
     private final int x;
-
     private final int y;
 
     @JsonbCreator
@@ -53,7 +54,6 @@ public class Coordinate {
     public int hashCode() {
         return Objects.hash();
     }
-
 
 
 }

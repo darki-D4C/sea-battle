@@ -1,4 +1,4 @@
-package org.krista.seabattle;
+package org.krista.seabattle.services;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

@@ -1,4 +1,7 @@
-package org.krista.seabattle;
+package org.krista.seabattle.utility;
+
+import org.krista.seabattle.classes.BattleShip;
+import org.krista.seabattle.classes.Coordinate;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -6,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
-import static org.krista.seabattle.Position.HORIZONTAL;
-import static org.krista.seabattle.Position.VERTICAL;
 
 /**
  * Class to represent AI for placing ships.
@@ -19,12 +19,18 @@ public class BasicAI {
      */
     private final int[][] mockField;
     private final List<BattleShip> mockShips;
-    private final Random rand = SecureRandom.getInstanceStrong();
+    private Random rand;
 
-    public BasicAI() throws NoSuchAlgorithmException {
+    public BasicAI() {
         this.mockField = new int[10][10];
         this.mockShips = new ArrayList<>();
+        try {
+            rand = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            rand = new Random();
+        }
         createRandomlyGeneratedShip();
+
     }
 
 
@@ -46,16 +52,16 @@ public class BasicAI {
         int[][] field;
         while (countOfShip < maxCountOfShips) {
             field = mockField;
-            int randomX =  this.rand.nextInt(9);
-            int randomY =  this.rand.nextInt(9);
-            int randomDirection =  this.rand.nextInt(2);
-            Position direction = randomDirection == 0 ? HORIZONTAL : VERTICAL;
+            int randomX = this.rand.nextInt(9);
+            int randomY = this.rand.nextInt(9);
+            int randomDirection = this.rand.nextInt(2);
+            Position direction = randomDirection == 0 ? Position.HORIZONTAL : Position.VERTICAL;
 
             while (!checkCoords(randomX, randomY, direction, numberOfDecks) || field[randomX][randomY] == 1) {
-                randomX =  this.rand.nextInt(9);
-                randomY =  this.rand.nextInt(9);
-                randomDirection =  this.rand.nextInt(3);
-                direction = randomDirection == 0 ? HORIZONTAL : VERTICAL;
+                randomX = this.rand.nextInt(9);
+                randomY = this.rand.nextInt(9);
+                randomDirection = this.rand.nextInt(3);
+                direction = randomDirection == 0 ? Position.HORIZONTAL : Position.VERTICAL;
             }
 
             BattleShip ship;
@@ -93,15 +99,15 @@ public class BasicAI {
         }
 
         for (int i = 0; i < countOfDecks; i++) {
-            if (direction == VERTICAL) {
+            if (direction == Position.VERTICAL) {
                 randomY += 1;
                 if (randomY > 9) return false;
                 if (field[randomX][randomY] == 1) return false;
             }
-            if(direction == HORIZONTAL){
-                    randomX += 1;
-                    if (randomX > 9) return false;
-                    if (field[randomX][randomY] == 1) return false;
+            if (direction == Position.HORIZONTAL) {
+                randomX += 1;
+                if (randomX > 9) return false;
+                if (field[randomX][randomY] == 1) return false;
             }
         }
         return true;
