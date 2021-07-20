@@ -1,14 +1,13 @@
 package org.krista.seabattle.test;
 
 import org.junit.Test;
-import org.krista.seabattle.classes.BattleShip;
-import org.krista.seabattle.classes.Coordinate;
+import org.krista.seabattle.models.BattleShip;
+import org.krista.seabattle.models.Coordinate;
 import org.krista.seabattle.services.GameService;
 import org.krista.seabattle.utility.BasicAI;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.*;

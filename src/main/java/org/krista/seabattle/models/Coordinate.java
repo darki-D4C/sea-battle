@@ -1,4 +1,4 @@
-package org.krista.seabattle.classes;
+package org.krista.seabattle.models;
 
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;

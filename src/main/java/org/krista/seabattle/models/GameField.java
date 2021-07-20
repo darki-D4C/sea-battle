@@ -1,4 +1,4 @@
-package org.krista.seabattle.classes;
+package org.krista.seabattle.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package org.krista.seabattle.services;
 
-import org.krista.seabattle.classes.BattleShip;
-import org.krista.seabattle.classes.Coordinate;
+import org.krista.seabattle.models.BattleShip;
+import org.krista.seabattle.models.Coordinate;
 import org.krista.seabattle.utility.GameStatus;
 import org.krista.seabattle.utility.JsonCreator;
 

@@ -1,7 +1,7 @@
 package org.krista.seabattle.utility;
 
-import org.krista.seabattle.classes.BattleShip;
-import org.krista.seabattle.classes.Coordinate;
+import org.krista.seabattle.models.BattleShip;
+import org.krista.seabattle.models.Coordinate;
 
 import javax.json.*;
 import java.util.List;

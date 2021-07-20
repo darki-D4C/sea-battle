@@ -1,4 +1,4 @@
-package org.krista.seabattle.classes;
+package org.krista.seabattle.models;
 
 import org.krista.seabattle.utility.Position;
 

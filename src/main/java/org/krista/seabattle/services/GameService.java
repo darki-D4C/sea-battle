@@ -1,8 +1,8 @@
 package org.krista.seabattle.services;
 
-import org.krista.seabattle.classes.BattleShip;
-import org.krista.seabattle.classes.Coordinate;
-import org.krista.seabattle.classes.GameField;
+import org.krista.seabattle.models.BattleShip;
+import org.krista.seabattle.models.Coordinate;
+import org.krista.seabattle.models.GameField;
 import org.krista.seabattle.utility.GameStatus;
 import org.krista.seabattle.utility.BasicAI;
 
@@ -98,7 +98,7 @@ public class GameService implements Serializable {
 
         int x = coords.get(0).getX();
         int y = coords.get(0).getY();
-        for (int i = 1; i < ship.getNumberOfDecks() - 1; i++) {
+        for (int i = 1; i < ship.getNumberOfDecks(); i++) {
             if (!(coords.get(i).getX() == x || coords.get(i).getY() == y) || (coords.get(i).getX() == x && coords.get(i).getY() == y)) {
                 // Если либо x либо y , не совпадают с
                 // соответсвующими x y первой палубы,
