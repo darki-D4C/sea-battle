@@ -99,4 +99,6 @@ public class BattleShip {
     public List<Coordinate> getShipParts() {
         return shipParts;
     }
+
+
 }

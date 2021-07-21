@@ -95,4 +95,14 @@ public class GameField implements Serializable {
     public boolean checkValidity(Coordinate coord) {
         return !(coord.getX() >= 0 && coord.getY() >= 0 && coord.getX() <= 9 && coord.getY() <= 9);
     }
+
+    public void clearShip(BattleShip foundShip) {
+        for(Coordinate tile : foundShip.getShipParts()){
+            field[tile.getX()][tile.getY()] = 0;
+        }
+    }
+
+    public void clearTile(Coordinate coord) {
+        field[coord.getX()][coord.getY()] = 0;
+    }
 }

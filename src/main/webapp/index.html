@@ -11,19 +11,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <script src="mainScript.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+    $( document ).ready(function() {
+            $("#start_placement button").on("click",startPlacement);
+            $("#turn_block").text("Start game by placing your ships");
+
+    });
+
+    </script>
 </head>
 <body>
 <header>
     <nav>
         <ul class="nav_bar">
             <li>
-                Help
+                <a onclick="showHelp()">Help</a>
             </li>
             <li>
                 <a href="">Results</a>
             </li>
-            <li>
-                Start over
+            <li >
+                <a onclick="startOver()" id="start_over">Start over</a>
+
             </li>
         </ul>
     </nav>
@@ -194,7 +204,7 @@
             </div>
             <div class="info_block">
                 <div id="turn_block">
-                    Somebody's turn
+
                 </div>
 
                 <div class="recent_events_block">
@@ -202,7 +212,7 @@
                         Recent events
                     </h3>
                     <div id="event">
-                        Player destroyed tile at A4
+
                     </div>
                 </div>
             </div>
@@ -360,7 +370,7 @@
 
         <div class="controls">
             <div id="start_placement">
-                <button class="control_button" onclick="startPlacement()">
+                <button class="control_button">
                     Place player ships
                 </button>
             </div>

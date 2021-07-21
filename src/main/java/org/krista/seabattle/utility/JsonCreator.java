@@ -22,7 +22,7 @@ public class JsonCreator {
      */
     public static void addInfoAboutDestroyedShip(JsonArrayBuilder info, BattleShip destroyedShip) {
         JsonObjectBuilder shipParameters = Json.createObjectBuilder();
-        shipParameters.add("shipParts", markShips(destroyedShip.getShipParts()));//here
+        shipParameters.add("shipParts", markShip(destroyedShip.getShipParts()));//here
         info.add(shipParameters.build());
     }
 
@@ -55,8 +55,24 @@ public class JsonCreator {
      * @param side that won the game
      * @return Json array with info about who won the game
      */
+
     public static JsonArray notifyAboutVictory(String side) {
         return Json.createArrayBuilder().add(Json.createObjectBuilder().add("winner", side).build()).build();
+    }
+
+    public static JsonArray notifyAboutVictory(String side,BattleShip ship) {
+        JsonArrayBuilder shipPartsJson = Json.createArrayBuilder().add(Json.createObjectBuilder().add("winner",side).build());
+        shipPartsJson.add(Json.createObjectBuilder().add("shipParts",markShip(ship.getShipParts())).build());
+        return shipPartsJson.build();
+    }
+
+    public static JsonArray notifyAboutVictoryServer(String side, List<BattleShip> ships) {
+        JsonArrayBuilder shipPartsJson = Json.createArrayBuilder().add(Json.createObjectBuilder().add("winner",side).build());
+        for(BattleShip ship : ships){
+            shipPartsJson.add(Json.createObjectBuilder().add("shipParts",markShip(ship.getShipParts())).build());
+        }
+        return shipPartsJson.build();
+
     }
 
     /**
@@ -65,7 +81,7 @@ public class JsonCreator {
      * @param shipParts destroyed parts of the ship
      * @return json array with info about destroyed ship parts
      */
-    public static JsonArray markShips(List<Coordinate> shipParts) {
+    public static JsonArray markShip(List<Coordinate> shipParts) {
         JsonArrayBuilder shipPartsJson = Json.createArrayBuilder();
         JsonObjectBuilder cordParameters = Json.createObjectBuilder();
         for (Coordinate cord : shipParts) {
@@ -91,9 +107,10 @@ public class JsonCreator {
         JsonArrayBuilder json = Json.createArrayBuilder();
         JsonObject side = Json.createObjectBuilder().add("side", "player").build();
         json.add(side);
-        JsonObject arrayOfParts = Json.createObjectBuilder().add("shipParts", markShips(parts)).build();
+        JsonObject arrayOfParts = Json.createObjectBuilder().add("shipParts", markShip(parts)).build();
         json.add(arrayOfParts);
         return json.build();
     }
+
 
 }

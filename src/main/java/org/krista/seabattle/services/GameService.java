@@ -132,18 +132,29 @@ public class GameService implements Serializable {
      *
      * @return status of attack( can be complete miss, or list of destroyed ships / coords)
      */
-    public List<Coordinate> attackPlayerField() {
+    public List<List<Coordinate>> attackPlayerField() {
+        List<List<Coordinate>> attackList = new ArrayList<>();
 
+        List<Coordinate> serverAttack = new ArrayList<>(attackPlayerTile());
+        while (!serverAttack.isEmpty()) {
+            attackList.add(serverAttack);
+            serverAttack = new ArrayList<>(attackPlayerTile());
+        }
+
+        return attackList;
+
+    }
+
+    public List<Coordinate> attackPlayerTile() {
         Coordinate coordToAttack;
-
         List<Coordinate> destroyedParts = new ArrayList<>();
-
         coordToAttack = generateCoord();
         if (getPlayerField().getField()[coordToAttack.getX()][coordToAttack.getY()] == 1) {
             getPlayerField().attackCoord(coordToAttack);
             BattleShip foundShip = getPlayerField().findShipByCord(coordToAttack);
             if (foundShip.getNumberOfDecks() == 0) {
                 destroyedParts.addAll(foundShip.getShipParts());
+                getPlayerField().clearShip(foundShip);
                 return destroyedParts;
             }
             destroyedParts.add(coordToAttack);

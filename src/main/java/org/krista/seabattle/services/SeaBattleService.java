@@ -61,24 +61,25 @@ public class SeaBattleService implements Serializable {
                 break;
             case FINISHED_P:
                 return JsonCreator.notifyAboutVictory("player");
-            case NOT_STARTED:
-                return Response.ok("\"status\":\"not_started\"");
             case FINISHED_S:
                 return JsonCreator.notifyAboutVictory("server");
-            default:
-                return Json.createObjectBuilder().add("status","error").build();
+            case NOT_STARTED:
+                return Response.ok("\"status\":\"not_started\"");
         }
 
         if (gameService.checkServerCoord(coord)) {
             gameService.getServerField().attackCoord(coord);
             if (gameService.checkGameOver("server")) {
                 gameService.setStatus(GameStatus.FINISHED_P);
-                return JsonCreator.notifyAboutVictory("player");
+                return JsonCreator.notifyAboutVictory("player", gameService.getServerField().findShipByCord(coord));
             }
             if (gameService.getServerField().findShipByCord(coord).getNumberOfDecks() == 0) {
-                return JsonCreator.returnInfoAboutDestroyedShipByPlayer(gameService.getServerField().
-                        findShipByCord(coord).getShipParts());
+                BattleShip destroyedShip = gameService.getServerField().
+                        findShipByCord(coord);
+                gameService.getServerField().clearShip(destroyedShip);
+                return JsonCreator.returnInfoAboutDestroyedShipByPlayer(destroyedShip.getShipParts());
             }
+            gameService.getServerField().clearTile(coord);
             return JsonCreator.returnInfoAboutDestroyedCoordByPlayer(coord);
         } else {
 
@@ -87,26 +88,26 @@ public class SeaBattleService implements Serializable {
                     add("x", coord.getX()).add("y", coord.getY()).build()).build());
             serverTurnActions.add(Json.createObjectBuilder().add("side", "server").build());
 
-            List<Coordinate> attack = gameService.attackPlayerField();
-            while (!attack.isEmpty()) {
-                if (attack.size() == 1) {
-                    if (gameService.getPlayerField().findShipByCord(attack.get(0)).getNumberOfDecks() == 0) {
-                        JsonCreator.addInfoAboutDestroyedShip(serverTurnActions, gameService.getPlayerField().findShipByCord(attack.get(0)));
+            List<List<Coordinate>> attack = gameService.attackPlayerField();
+            for (List<Coordinate> attackTile : attack) {
+                if (attackTile.size() == 1) {
+                    if (gameService.getPlayerField().findShipByCord(attackTile.get(0)).getNumberOfDecks() == 0) {
+                        JsonCreator.addInfoAboutDestroyedShip(serverTurnActions, gameService.getPlayerField().findShipByCord(attackTile.get(0)));
                     } else {
-                        JsonCreator.addInfoAboutDestroyedCord(serverTurnActions, attack.get(0));
+                        JsonCreator.addInfoAboutDestroyedCord(serverTurnActions, attackTile.get(0));
                     }
-                }
-                if (attack.size() > 1) {
-                    JsonCreator.addInfoAboutDestroyedShip(serverTurnActions, gameService.getPlayerField().findShipByCord(attack.get(0)));
+                } else if (attackTile.size() > 1) {
+                    JsonCreator.addInfoAboutDestroyedShip(serverTurnActions, gameService.getPlayerField().findShipByCord(attackTile.get(0)));
                 }
             }
+
             JsonArray serverTurn = serverTurnActions.build();
             if ((serverTurn.size() - 2) == 0) {
                 return JsonCreator.returnInfoAboutCompleteMiss(coord);
             }
             if (gameService.checkGameOver("player")) {
                 gameService.setStatus(GameStatus.FINISHED_S);
-                return JsonCreator.notifyAboutVictory("server");
+                return JsonCreator.notifyAboutVictoryServer("server", gameService.getPlayerField().getShips());
             }
             return serverTurn;
         }
