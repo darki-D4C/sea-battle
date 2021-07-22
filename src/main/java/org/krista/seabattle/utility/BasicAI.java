@@ -88,6 +88,8 @@ public class BasicAI {
      * @return valid or not
      */
     private boolean checkCoords(int randomX, int randomY, Position direction, int countOfDecks) {
+
+
         int[][] field = mockField;
 
         if (field[randomX][randomY] == 1) {
@@ -95,18 +97,67 @@ public class BasicAI {
         }
 
         if (countOfDecks == 1) {
-            return true;
+            if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                    (((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
+                    (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1)) ||
+                    (((randomY + 1 < 10) && field[randomX][randomY + 1] == 1))) {
+                return false;
+            }else {
+                return true;
+            }
         }
 
+
+
         for (int i = 0; i < countOfDecks; i++) {
+
             if (direction == Position.VERTICAL) {
+                if (i == 0) {
+                    if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                            (((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
+                            (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1))) {
+                        return false;
+                    }
+                }
                 randomY += 1;
+
                 if (randomY > 9) return false;
+                if ((((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
+                        (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1))) {
+                    return false;
+                }
+                if (i == countOfDecks - 1) {
+                    if (((randomY + 1 < 10) && field[randomX][randomY - 1] == 1) ||
+                            (((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
+                            (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1))) {
+                        return false;
+                    }
+                }
                 if (field[randomX][randomY] == 1) return false;
+
             }
             if (direction == Position.HORIZONTAL) {
+                if (i == 0) {
+                    if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                            (((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
+                            (((randomY + 1 < 10) && field[randomX][randomY + 1] == 1))) {
+                        return false;
+                    }
+                }
                 randomX += 1;
                 if (randomX > 9) return false;
+                if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                        ((randomY + 1 < 10) && field[randomX][randomY + 1] == 1)) {
+                    return false;
+                }
+
+                if (i == countOfDecks - 1) {
+                    if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                            (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1)) ||
+                            (((randomY + 1 < 10) && field[randomX][randomY + 1] == 1))) {
+                        return false;
+                    }
+                }
                 if (field[randomX][randomY] == 1) return false;
             }
         }

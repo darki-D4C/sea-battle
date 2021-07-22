@@ -20,13 +20,19 @@ public class TestService {
     @Test
     public void aiPlacementShipsTest() throws NoSuchMethodException, InvocationTargetException,
             IllegalAccessException {
+        int[][] testField = new int[10][10];
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                testField[i][j] = 0;
+            }
+        }
         BasicAI aiTest = new BasicAI();
         Method checkShip = GameService.class.getDeclaredMethod(
-                "checkShip", BattleShip.class);
+                "checkShip", BattleShip.class,int[][].class);
         checkShip.setAccessible(true);
         boolean valid = true;
         for (BattleShip shipTest : aiTest.getShips()) {
-            if (!((boolean) checkShip.invoke(new GameService(), shipTest))) {
+            if (!((boolean) checkShip.invoke(new GameService(), shipTest,testField))) {
                 valid = false;
                 break;
             }

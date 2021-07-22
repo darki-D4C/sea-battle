@@ -70,7 +70,7 @@ public class GameService implements Serializable {
         if (ships == null) return false;
         int[][] checkField = playerField.getField();
         for (BattleShip ship : ships) {
-            if (!checkShip(ship)) return false;
+            if (!checkShip(ship, checkField)) return false;
             for (Coordinate coord : ship.getRemainingShipParts()) {
                 if ((checkField[coord.getX()][coord.getY()] != 1)) {
                     checkField[coord.getX()][coord.getY()] = 1;
@@ -83,10 +83,11 @@ public class GameService implements Serializable {
     /**
      * Validate specific ship.
      *
-     * @param ship to validate
+     * @param ship       to validate
+     * @param checkField mock field to check ship on
      * @return valid or not
      */
-    private boolean checkShip(BattleShip ship) {
+    public boolean checkShip(BattleShip ship, int[][] checkField) {
         int[][] field = playerField.getField();
         List<Coordinate> coords = ship.getRemainingShipParts();
 
@@ -103,6 +104,14 @@ public class GameService implements Serializable {
                 // Если либо x либо y , не совпадают с
                 // соответсвующими x y первой палубы,
                 //то палуба не находится на одной линии с первой
+                return false;
+            }
+        }
+        for (Coordinate coord : ship.getShipParts()) {
+            if ((coord.getX() + 1 < 10 && checkField[coord.getX() + 1][coord.getY()] == 1 && !ship.hasPart(new Coordinate(coord.getX() + 1, coord.getY()))) ||
+                    (coord.getX() - 1 > 0 && checkField[coord.getX() - 1][coord.getY()] == 1 && !ship.hasPart(new Coordinate(coord.getX() - 1, coord.getY())) ||
+                            (coord.getY() + 1 < 10 && checkField[coord.getX()][coord.getY() + 1] == 1 && !ship.hasPart(new Coordinate(coord.getX(), coord.getY() + 1)))) ||
+                    (coord.getY() -1 > 0 && checkField[coord.getX()][coord.getY() - 1] == 1 && !ship.hasPart(new Coordinate(coord.getX(), coord.getY() - 1)))) {
                 return false;
             }
         }
@@ -197,13 +206,16 @@ public class GameService implements Serializable {
                     return false;
                 }
             }
+            setStatus(GameStatus.FINISHED_S);
         }
         if (side.equals("server")) {
             for (BattleShip ship : getServerField().getShips()) {
                 if (ship.getNumberOfDecks() != 0) {
+
                     return false;
                 }
             }
+            setStatus(GameStatus.FINISHED_P);
         }
         return true;
     }

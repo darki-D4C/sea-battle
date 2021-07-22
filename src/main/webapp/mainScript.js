@@ -1,19 +1,72 @@
 let arrayOfShips = [];
 let state = "NOT_STARTED";
 let arrayOfCoords = [];
+let playerName;
+
+let startTime;
+let elapsedTime = 0;
+let timerInterval;
+let dateOfPlay = new Date(Date.now());
+let winner;
+
+function timeToString(time) {
+    let diffInHrs = time / 3600000;
+    let hh = Math.floor(diffInHrs);
+
+    let diffInMin = (diffInHrs - hh) * 60;
+    let mm = Math.floor(diffInMin);
+
+    let diffInSec = (diffInMin - mm) * 60;
+    let ss = Math.floor(diffInSec);
+
+    let diffInMs = (diffInSec - ss) * 100;
+    let ms = Math.floor(diffInMs);
+
+    let formattedMM = mm.toString().padStart(2, "0");
+    let formattedSS = ss.toString().padStart(2, "0");
+    let formattedMS = ms.toString().padStart(2, "0");
+
+    return `${formattedMM}:${formattedSS}:${formattedMS}`;
+}
+
+function startTimer() {
+    startTime = Date.now() - elapsedTime;
+    timerInterval = setInterval(function printTime() {
+        elapsedTime = Date.now() - startTime;
+        $("#timer").text(timeToString(elapsedTime));
+    }, 10);
+}
 
 
-function startOver(){
+function sendNameAndStart() {
+    playerName = $("#name").val();
+    if (playerName.length > 0) {
+        $("#name").val(null);
+        console.log($("#name").val())
+        $("#name_input").hide();
+        $("#player_field .field_name").text(playerName + "'s field")
+        $("#turn_block").text("Start game by placing your ships");
+        $("#start_placement button").on("click", function () {
+            startPlacement();
+        })
+    }
+
+
+}
+
+function startOver() {
+    $("#name_input").show();
     removeHandlersForAttack();
     removeHandlersForPlacing();
     removeHandlers();
     clearFields();
-    $("#turn_block").text("Start game by placing your ships");
+    $("#timer").text("00:00:00");
+    $("#turn_block").text("Start game by entering your name");
     $("#event").text("");
     $("#start_placement button").off();
-    $("#start_placement button").on("click",function (){
-        startPlacement();
-    })
+    $("#player_field .field_name").text("Player field")
+
+
 }
 
 function Coordinate(x, y) {
@@ -63,7 +116,7 @@ function deployShips(numberOfDecks, numberOfShips) {
             arrayOfShips.push(new Ship(arrayOfCoords));
             arrayOfCoords = [];
             countOfDeployedShips++;
-            $("#event").text("Please, place your " + (countOfDeployedShips+1) + " " + numberOfDecks + "-deck ship");
+            $("#event").text("Please, place your " + (countOfDeployedShips + 1) + " " + numberOfDecks + "-deck ship");
             if (arrayOfShips.length === 10) {
                 removeHandlersForPlacing();
             }
@@ -71,10 +124,10 @@ function deployShips(numberOfDecks, numberOfShips) {
                 countOfDeployedShips = 0;
                 numberOfShips += 1;
                 numberOfDecks -= 1;
-                if(numberOfDecks === 0){
+                if (numberOfDecks === 0) {
                     $("#event").text("");
 
-                }else {
+                } else {
                     $("#event").text("Please, place your " + (countOfDeployedShips + 1) + " " + numberOfDecks + "-deck ship");
                 }
             }
@@ -121,37 +174,59 @@ function removeHandlersForAttack() {
     $("#enemy_field td[data-x]").off();
 }
 
+function getDateOfPlay() {
+    let date_ob = new Date(dateOfPlay);
+    let date = ("0" + date_ob.getDate()).slice(-2);
+    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+    let year = date_ob.getFullYear();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    let seconds = date_ob.getSeconds();
+    return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+}
+
 function updateEventBarWinner(side) {
+    if(side === "Server"){
+        state = "server_won"
+    }else{
+        state = "player_won"
+    }
+    /*
+    console.log(playerName);
+    console.log(getDateOfPlay());
+    console.log($("#timer").text());
+    console.log(state);
+
+     */
     $("#event").text(side + " has won!")
 }
 
 function updateEventBarCoord(coord) {
-    $("#event").text("Player destroyed tile at (" + matchNumWithLetter(coord.x) + ", " + (coord.y+1) + ")");
+    $("#event").text(playerName + " destroyed tile at (" + matchNumWithLetter(coord.x) + ", " + (coord.y + 1) + ")");
 }
 
 function updateEventBarShip(shipParts) {
     let eventString;
     if (Object.keys(shipParts).length !== 1) {
-        eventString = "Player destroyed ship with tiles:";
+        eventString = playerName + " destroyed ship with tiles:";
         shipParts.forEach(elem => {
-            eventString += " (" + matchNumWithLetter(elem.x) + ", " + (elem.y+1) + ")"
+            eventString += " (" + matchNumWithLetter(elem.x) + ", " + (elem.y + 1) + ")"
         })
     } else {
-        eventString = "Player destroyed ship with tile: (" + matchNumWithLetter(shipParts[0].x) + ", " + (shipParts[0].y+1) + ")";
+        eventString = playerName + " destroyed ship with tile: (" + matchNumWithLetter(shipParts[0].x) + ", " + (shipParts[0].y + 1) + ")";
     }
     $("#event").text(eventString);
 
 }
 
 function updateEventBarBothMissed(missedCoord) {
-    let evenString = "Player missed at (" + matchNumWithLetter(missedCoord.x) + ", " + (missedCoord.y+1) + "),server missed";
+    let evenString = playerName + " missed at (" + matchNumWithLetter(missedCoord.x) + ", " + (missedCoord.y + 1) + "), Server missed";
     $("#event").text(evenString);
 }
 
 function updateEventBarServer(serverAttack) {
-    serverAttack.splice(1,1);
-    console.log(serverAttack)
-    let eventString = "Player missed at (" + matchNumWithLetter(serverAttack[0].missed.x) + ", " + (serverAttack[0].missed.y+1) + ")";
+    serverAttack.splice(1, 1);
+    let eventString = playerName + " missed at (" + matchNumWithLetter(serverAttack[0].missed.x) + ", " + (serverAttack[0].missed.y + 1) + ")";
     serverAttack.forEach(attack => {
         if (!attack.hasOwnProperty("missed")) {
             if (Object.keys(attack).length !== 2) {
@@ -162,9 +237,9 @@ function updateEventBarServer(serverAttack) {
                 })
             } else {
                 if (attack.hasOwnProperty("shipParts")) {
-                    eventString += ",Server destroyed ship with tile: (" + matchNumWithLetter(attack.shipParts[0].x) + ", " + (attack.shipParts[0].y+1) + ")";
+                    eventString += ",Server destroyed ship with tile: (" + matchNumWithLetter(attack.shipParts[0].x) + ", " + (attack.shipParts[0].y + 1) + ")";
                 } else {
-                    eventString += ",Server destroyed tile at : (" + matchNumWithLetter(attack.x) + ", " + (attack.y+1) + ")";
+                    eventString += ",Server destroyed tile at : (" + matchNumWithLetter(attack.x) + ", " + (attack.y + 1) + ")";
                 }
             }
         }
@@ -194,9 +269,11 @@ function matchNumWithLetter(num) {
             return 'J';
         case 9:
             return 'K'
-
-
     }
+}
+
+function sendInfoToDataBase() {
+
 }
 
 function changeField(result) {
@@ -212,17 +289,25 @@ function changeField(result) {
             let tileSelector = "#enemy_field td[data-x=" + part.x + "][data-y=" + part.y + "]";
             $(tileSelector).text("X");
         })
-        updateEventBarWinner("Player");
+        updateEventBarWinner(playerName);
+        clearInterval(timerInterval);
+        winner = "Player";
         removeHandlersForAttack();
+        sendInfoToDataBase();
         //add info to database
     } else if (result[0].winner === "server") {
         result.forEach(elem => {
-            elem.shipParts.forEach(part => {
-                let tileSelector = "#player_field td[data-x=" + part.x + "][data-y=" + part.y + "]";
-                $(tileSelector).text("X");
-            })
+            if (elem.hasOwnProperty("winner")) {
+                //skip elem with property winner
+            } else {
+                elem.shipParts.forEach(part => {
+                    let tileSelector = "#player_field td[data-x=" + part.x + "][data-y=" + part.y + "]";
+                    $(tileSelector).text("X");
+                })
+            }
         })
         updateEventBarWinner("Server");
+        winner = "Server";
         $("#turn_block").text("Server won!");
         //add info to database
     }
@@ -264,7 +349,7 @@ function changeField(result) {
                     })
                 } else {
                     let tileSelector = "#player_field td[data-x=" + elem.x + "][data-y=" + elem.y + "]";
-                    $(tileSelector).text("X");
+                    $(tileSelector).text("/");
                 }
             }
         })
@@ -279,6 +364,8 @@ function changeField(result) {
 
 function startAttackPhase() {
     console.log("Attack time!")
+    startTimer();
+    dateOfPlay = Date.now();
     $("#start_placement button").off();// for some reason this line fails to remove onclick handler
     $("#enemy_field td[data-x]").on("click", function () {
 
@@ -319,7 +406,6 @@ function sendShipsToServer() {
 
     alert(arrayOfShips);
 }
-
 
 function clearFields() {
     arrayOfShips = [];
@@ -363,7 +449,7 @@ function startPlacement() {
 
 }
 
-function showHelp(){
+function showHelp() {
     alert("Place your ships either horizontally or vertically, " +
         "there are 4 kinds of ships , with one deck, two decks, " +
         "three decks and four decks." +

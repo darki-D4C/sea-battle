@@ -70,7 +70,6 @@ public class SeaBattleService implements Serializable {
         if (gameService.checkServerCoord(coord)) {
             gameService.getServerField().attackCoord(coord);
             if (gameService.checkGameOver("server")) {
-                gameService.setStatus(GameStatus.FINISHED_P);
                 return JsonCreator.notifyAboutVictory("player", gameService.getServerField().findShipByCord(coord));
             }
             if (gameService.getServerField().findShipByCord(coord).getNumberOfDecks() == 0) {
@@ -106,7 +105,6 @@ public class SeaBattleService implements Serializable {
                 return JsonCreator.returnInfoAboutCompleteMiss(coord);
             }
             if (gameService.checkGameOver("player")) {
-                gameService.setStatus(GameStatus.FINISHED_S);
                 return JsonCreator.notifyAboutVictoryServer("server", gameService.getPlayerField().getShips());
             }
             return serverTurn;
