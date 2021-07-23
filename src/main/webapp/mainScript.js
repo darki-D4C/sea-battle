@@ -403,8 +403,6 @@ function sendShipsToServer() {
             }
         }
     )
-
-    alert(arrayOfShips);
 }
 
 function clearFields() {

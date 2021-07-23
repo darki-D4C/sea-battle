@@ -96,8 +96,33 @@ public class GameField implements Serializable {
         return !(coord.getX() >= 0 && coord.getY() >= 0 && coord.getX() <= 9 && coord.getY() <= 9);
     }
 
+    public boolean checkShipAround(BattleShip ship, int[][] checkField) {
+        for (Coordinate coord : ship.getShipParts()) {
+            if (checkCoordinateAround(coord, ship, "top",checkField) || checkCoordinateAround(coord, ship, "bottom",checkField)
+                    || checkCoordinateAround(coord, ship, "right",checkField) || checkCoordinateAround(coord, ship, "left",checkField)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkCoordinateAround(Coordinate coord, BattleShip ship, String position, int[][] checkField) {
+        switch (position) {
+            case "top":
+                return (coord.getY() - 1 > 0 && checkField[coord.getX()][coord.getY() - 1] == 1 && !ship.hasPart(new Coordinate(coord.getX(), coord.getY() - 1)));
+            case "bottom":
+                return (coord.getY() + 1 < 10 && checkField[coord.getX()][coord.getY() + 1] == 1 && !ship.hasPart(new Coordinate(coord.getX(), coord.getY() + 1)));
+            case "right":
+                return (coord.getX() + 1 < 10 && checkField[coord.getX() + 1][coord.getY()] == 1 && !ship.hasPart(new Coordinate(coord.getX() + 1, coord.getY())));
+            case "left":
+                return (coord.getX() - 1 > 0 && checkField[coord.getX() - 1][coord.getY()] == 1 && !ship.hasPart(new Coordinate(coord.getX() - 1, coord.getY())));
+            default:
+                return false;
+        }
+    }
+
     public void clearShip(BattleShip foundShip) {
-        for(Coordinate tile : foundShip.getShipParts()){
+        for (Coordinate tile : foundShip.getShipParts()) {
             field[tile.getX()][tile.getY()] = 0;
         }
     }

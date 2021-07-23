@@ -107,16 +107,11 @@ public class GameService implements Serializable {
                 return false;
             }
         }
-        for (Coordinate coord : ship.getShipParts()) {
-            if ((coord.getX() + 1 < 10 && checkField[coord.getX() + 1][coord.getY()] == 1 && !ship.hasPart(new Coordinate(coord.getX() + 1, coord.getY()))) ||
-                    (coord.getX() - 1 > 0 && checkField[coord.getX() - 1][coord.getY()] == 1 && !ship.hasPart(new Coordinate(coord.getX() - 1, coord.getY())) ||
-                            (coord.getY() + 1 < 10 && checkField[coord.getX()][coord.getY() + 1] == 1 && !ship.hasPart(new Coordinate(coord.getX(), coord.getY() + 1)))) ||
-                    (coord.getY() -1 > 0 && checkField[coord.getX()][coord.getY() - 1] == 1 && !ship.hasPart(new Coordinate(coord.getX(), coord.getY() - 1)))) {
-                return false;
-            }
-        }
-        return true;
+
+        return getPlayerField().checkShipAround(ship,checkField);
     }
+
+
 
     public GameField getPlayerField() {
         return playerField;

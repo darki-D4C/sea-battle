@@ -91,77 +91,105 @@ public class BasicAI {
 
 
         int[][] field = mockField;
-
+        //Check if first tile is free
         if (field[randomX][randomY] == 1) {
             return false;
         }
 
-        if (countOfDecks == 1) {
-            if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
-                    (((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
-                    (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1)) ||
-                    (((randomY + 1 < 10) && field[randomX][randomY + 1] == 1))) {
-                return false;
-            }else {
-                return true;
-            }
+        //check if ship with one deck doesnt have other ship in one tile proximity
+        if (countOfDecks == 1 && checkTileAround(randomX,randomY,"single")) {
+            return false;
         }
 
 
-
         for (int i = 0; i < countOfDecks; i++) {
-
+            //check for vertical
             if (direction == Position.VERTICAL) {
-                if (i == 0) {
-                    if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
-                            (((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
-                            (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1))) {
-                        return false;
-                    }
-                }
-                randomY += 1;
-
-                if (randomY > 9) return false;
-                if ((((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
-                        (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1))) {
+                //check if vertical first tile doesnt have other ships tile on top,right or left
+                if (i == 0 && checkTileAround(randomX, randomY, "verticalHighMost")) {
                     return false;
                 }
-                if (i == countOfDecks - 1) {
-                    if (((randomY + 1 < 10) && field[randomX][randomY - 1] == 1) ||
-                            (((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
-                            (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1))) {
-                        return false;
-                    }
+
+                //check for out of bounds
+                randomY += 1;
+                if (randomY > 9) return false;
+
+                //check if vertical tile doesnt have other ships tile on right or left
+                if (checkTileAround(randomX,randomY,"vertical")) {
+                    return false;
                 }
+                //check if vertical last tile doesnt have other ships tile on bottom,right or left
+                if (i == countOfDecks - 1 && checkTileAround(randomX, randomY, "verticalDownMost")) {
+                    return false;
+                }
+
+                //check if current tile is free
                 if (field[randomX][randomY] == 1) return false;
 
             }
+            //check for horizontal
             if (direction == Position.HORIZONTAL) {
-                if (i == 0) {
-                    if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
-                            (((randomX - 1 > 0) && field[randomX - 1][randomY] == 1)) ||
-                            (((randomY + 1 < 10) && field[randomX][randomY + 1] == 1))) {
-                        return false;
-                    }
-                }
-                randomX += 1;
-                if (randomX > 9) return false;
-                if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
-                        ((randomY + 1 < 10) && field[randomX][randomY + 1] == 1)) {
+                //check if horizontal first tile doesnt have other ships tile on top,right or bottom
+                if (i == 0 && checkTileAround(randomX, randomY, "horizontalLeftMost")) {
                     return false;
                 }
 
-                if (i == countOfDecks - 1) {
-                    if (((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
-                            (((randomX + 1 < 10) && field[randomX + 1][randomY] == 1)) ||
-                            (((randomY + 1 < 10) && field[randomX][randomY + 1] == 1))) {
-                        return false;
-                    }
+                //check for out of bounds
+                randomX += 1;
+                if (randomX > 9) return false;
+
+                //check if horizontal tile doesnt have other ships tile on top or bottom
+                if (checkTileAround(randomX, randomY, "horizontal")) {
+                    return false;
                 }
+
+                //check if horizontal last tile doesnt have other ships tile on top,left or bottom
+                if (i == countOfDecks - 1 && checkTileAround(randomX, randomY, "horizontalRightMost")) {
+                    return false;
+                }
+
+                //check if current tile is free
                 if (field[randomX][randomY] == 1) return false;
             }
         }
         return true;
+    }
+
+    private boolean checkTileAround(int randomX, int randomY, String tilePosition) {
+        int[][] field = mockField;
+
+        switch (tilePosition) {
+            case "single" :
+                return ((randomY - 1 <= 0) || field[randomX][randomY - 1] == 1) &&
+                        ((randomX - 1 <= 0) || field[randomX - 1][randomY] == 1) &&
+                        ((randomX + 1 >= 10) || field[randomX + 1][randomY] == 1) &&
+                        ((randomY + 1 >= 10) || field[randomX][randomY + 1] == 1);
+            case "horizontalLeftMost":
+                return ((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                        ((randomX - 1 > 0) && field[randomX - 1][randomY] == 1) ||
+                        ((randomY + 1 < 10) && field[randomX][randomY + 1] == 1);
+            case "horizontalRightMost":
+                return ((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                        ((randomX + 1 < 10) && field[randomX + 1][randomY] == 1) ||
+                        ((randomY + 1 < 10) && field[randomX][randomY + 1] == 1);
+            case "horizontal":
+                return ((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                        ((randomY + 1 < 10) && field[randomX][randomY + 1] == 1);
+            case "verticalHighMost":
+                return ((randomY - 1 > 0) && field[randomX][randomY - 1] == 1) ||
+                        ((randomX - 1 > 0) && field[randomX - 1][randomY] == 1) ||
+                        ((randomX + 1 < 10) && field[randomX + 1][randomY] == 1);
+            case "verticalDownMost":
+                return ((randomY + 1 < 10) && field[randomX][randomY - 1] == 1) ||
+                        ((randomX - 1 > 0) && field[randomX - 1][randomY] == 1) ||
+                        ((randomX + 1 < 10) && field[randomX + 1][randomY] == 1);
+            case "vertical":
+                return ((randomX - 1 > 0) && field[randomX - 1][randomY] == 1) ||
+                        ((randomX + 1 < 10) && field[randomX + 1][randomY] == 1);
+            default:
+                return true;
+        }
+
     }
 
     /**

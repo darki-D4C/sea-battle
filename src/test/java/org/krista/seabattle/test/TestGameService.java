@@ -1,6 +1,7 @@
 package org.krista.seabattle.test;
 
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.krista.seabattle.models.BattleShip;
 import org.krista.seabattle.models.Coordinate;
 import org.krista.seabattle.services.GameService;
@@ -14,14 +15,21 @@ import static org.assertj.core.api.Assertions.*;
 
 public class TestGameService {
 
-    @Test
-    public void checkShipValidTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        int[][] testField = new int[10][10];
+    private int[][] testField;
+
+    @BeforeEach
+    public void init(){
+        testField = new int[10][10];
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 testField[i][j] = 0;
             }
         }
+    }
+
+    @Test
+    public void checkShipValidTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
         BattleShip shipTest = new BattleShip(Arrays.asList(new Coordinate(5, 4), new Coordinate(5, 5), new Coordinate(5, 6)));
         Method checkShip = GameService.class.getDeclaredMethod(
                 "checkShip", BattleShip.class,int[][].class);
@@ -31,12 +39,6 @@ public class TestGameService {
 
     @Test
     public void checkShipInvalidTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        int[][] testField = new int[10][10];
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                testField[i][j] = 0;
-            }
-        }
         BattleShip shipTest = new BattleShip(Arrays.asList(new Coordinate(5, 4), new Coordinate(6, 5), new Coordinate(5, 6)));
         Method checkShip = GameService.class.getDeclaredMethod(
                 "checkShip", BattleShip.class,int[][].class);
@@ -47,12 +49,7 @@ public class TestGameService {
     @Test
     public void aiPlacementShipsTest() throws NoSuchMethodException, InvocationTargetException,
             IllegalAccessException {
-        int[][] testField = new int[10][10];
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                testField[i][j] = 0;
-            }
-        }
+
         BasicAI aiTest = new BasicAI();
         Method checkShip = GameService.class.getDeclaredMethod(
                 "checkShip", BattleShip.class,int[][].class);
